@@ -12,6 +12,7 @@ import {
   InputRightElement,
   Stack,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -21,27 +22,39 @@ import { ROUTE_KEY } from "../../configs/routes";
 import { motion } from "framer-motion";
 import MotionDiv from "../../components/MotionDiv/MotionDiv";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import QueryString from "query-string";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "src/store/auth/actions";
 
-const Login = ({ history }) => {
+const Login = ({ history, location }) => {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
+    setValue,
   } = useForm();
   const [isShowPassword, setIsShowPassword] = useState(false);
+  const dispatch = useDispatch();
+  const toast = useToast();
+  const { loading } = useSelector((state) => state.auth);
 
-  const onSubmit = (values) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        alert(JSON.stringify(values, null, 2));
-        reset();
-        resolve();
-      }, 3000);
-    });
+  const onSubmit = async (values) => {
+    dispatch(login(values, history, toast, reset));
   };
 
-  console.log(errors);
+  useEffect(() => {
+    if (location && location.search) {
+      console.log(location.search);
+      const { email } = QueryString.parse(location.search);
+      if (email) setValue("email", email, { shouldValidate: true });
+    }
+    return () => {
+      location.search = null;
+      reset();
+    };
+  }, [location.search]);
 
   const handleShowPassword = () => {
     setIsShowPassword(!isShowPassword);
@@ -155,7 +168,7 @@ const Login = ({ history }) => {
                   size="lg"
                   mt={4}
                   colorScheme="teal"
-                  isLoading={isSubmitting}
+                  isLoading={loading}
                   type="submit"
                 >
                   SIGN-IN

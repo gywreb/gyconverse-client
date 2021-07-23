@@ -1,12 +1,9 @@
 import {
   Box,
   Button,
-  chakra,
-  Divider,
   Flex,
   FormControl,
   FormErrorMessage,
-  FormHelperText,
   Icon,
   Input,
   InputGroup,
@@ -14,8 +11,8 @@ import {
   InputRightElement,
   Stack,
   Text,
+  useToast,
 } from "@chakra-ui/react";
-import { motion } from "framer-motion";
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { MdEmail, MdLock, MdPerson } from "react-icons/md";
@@ -23,6 +20,9 @@ import { AiFillEyeInvisible, AiFillEye } from "react-icons/all";
 import { ROUTE_KEY } from "../../configs/routes";
 import MotionDiv from "../../components/MotionDiv/MotionDiv";
 import { Link } from "react-router-dom";
+import omit from "lodash/omit";
+import { useDispatch, useSelector } from "react-redux";
+import { register as registerApi } from "../../store/auth/actions";
 
 const Register = ({ history }) => {
   const {
@@ -32,19 +32,17 @@ const Register = ({ history }) => {
     watch,
     reset,
   } = useForm();
+  const dispatch = useDispatch();
+  const toast = useToast();
+  const { loading } = useSelector((state) => state.auth);
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isShowConfirmPass, setIsShowConfirmPass] = useState(false);
 
   const password = useRef({});
   password.current = watch("password", "");
-  const onSubmit = (values) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        alert(JSON.stringify(values, null, 2));
-        reset();
-        resolve();
-      }, 3000);
-    });
+  const onSubmit = async (values) => {
+    let newUser = omit(values, "confirmPassword");
+    dispatch(registerApi(newUser, history, toast, reset));
   };
 
   const handleShowPassword = () => {
@@ -204,7 +202,7 @@ const Register = ({ history }) => {
                   size="lg"
                   mt={4}
                   colorScheme="teal"
-                  isLoading={isSubmitting}
+                  isLoading={loading}
                   type="submit"
                 >
                   SIGN-UP
