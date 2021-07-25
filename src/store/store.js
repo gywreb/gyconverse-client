@@ -12,6 +12,7 @@ const persistConfig = {
   stateReconciler: autoMergeLevel2,
   debug: true,
   timeout: null,
+  whitelist: ["auth"],
 };
 
 const pReducer = persistReducer(persistConfig, reducer);
