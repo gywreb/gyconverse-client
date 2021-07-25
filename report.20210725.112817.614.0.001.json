@@ -1,0 +1,406 @@
+
+{
+  "header": {
+    "reportVersion": 2,
+    "event": "Allocation failed - JavaScript heap out of memory",
+    "trigger": "FatalError",
+    "filename": "report.20210725.112817.614.0.001.json",
+    "dumpEventTime": "2021-07-25T11:28:17Z",
+    "dumpEventTimeStamp": "1627212497219",
+    "processId": 614,
+    "threadId": null,
+    "cwd": "/root/gyconverse-client",
+    "commandLine": [
+      "/root/.nvm/versions/node/v12.16.2/bin/node",
+      "--max_old_space_size=256",
+      "/root/gyconverse-client/node_modules/react-scripts/scripts/build.js"
+    ],
+    "nodejsVersion": "v12.16.2",
+    "glibcVersionRuntime": "2.28",
+    "glibcVersionCompiler": "2.17",
+    "wordSize": 64,
+    "arch": "x64",
+    "platform": "linux",
+    "componentVersions": {
+      "node": "12.16.2",
+      "v8": "7.8.279.23-node.34",
+      "uv": "1.34.2",
+      "zlib": "1.2.11",
+      "brotli": "1.0.7",
+      "ares": "1.15.0",
+      "modules": "72",
+      "nghttp2": "1.40.0",
+      "napi": "5",
+      "llhttp": "2.0.4",
+      "http_parser": "2.9.3",
+      "openssl": "1.1.1e",
+      "cldr": "36.0",
+      "icu": "65.1",
+      "tz": "2019c",
+      "unicode": "12.1"
+    },
+    "release": {
+      "name": "node",
+      "lts": "Erbium",
+      "headersUrl": "https://nodejs.org/download/release/v12.16.2/node-v12.16.2-headers.tar.gz",
+      "sourceUrl": "https://nodejs.org/download/release/v12.16.2/node-v12.16.2.tar.gz"
+    },
+    "osName": "Linux",
+    "osRelease": "4.19.0-16-amd64",
+    "osVersion": "#1 SMP Debian 4.19.181-1 (2021-03-19)",
+    "osMachine": "x86_64",
+    "cpus": [
+      {
+        "model": "Intel Core Processor (Haswell, no TSX, IBRS)",
+        "speed": 2399,
+        "user": 159469100,
+        "nice": 243200,
+        "sys": 115014800,
+        "idle": 19888102400,
+        "irq": 0
+      }
+    ],
+    "networkInterfaces": [
+      {
+        "name": "lo",
+        "internal": true,
+        "mac": "00:00:00:00:00:00",
+        "address": "127.0.0.1",
+        "netmask": "255.0.0.0",
+        "family": "IPv4"
+      },
+      {
+        "name": "ens3",
+        "internal": false,
+        "mac": "56:00:03:26:da:d6",
+        "address": "139.180.196.41",
+        "netmask": "255.255.254.0",
+        "family": "IPv4"
+      },
+      {
+        "name": "lo",
+        "internal": true,
+        "mac": "00:00:00:00:00:00",
+        "address": "::1",
+        "netmask": "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff",
+        "family": "IPv6",
+        "scopeid": 0
+      },
+      {
+        "name": "ens3",
+        "internal": false,
+        "mac": "56:00:03:26:da:d6",
+        "address": "2001:19f0:7001:948:5400:3ff:fe26:dad6",
+        "netmask": "ffff:ffff:ffff:ffff::",
+        "family": "IPv6",
+        "scopeid": 0
+      },
+      {
+        "name": "ens3",
+        "internal": false,
+        "mac": "56:00:03:26:da:d6",
+        "address": "fe80::5400:3ff:fe26:dad6",
+        "netmask": "ffff:ffff:ffff:ffff::",
+        "family": "IPv6",
+        "scopeid": 2
+      }
+    ],
+    "host": "gywreb"
+  },
+  "javascriptStack": {
+    "message": "No stack.",
+    "stack": [
+      "Unavailable."
+    ]
+  },
+  "nativeStack": [
+    {
+      "pc": "0x0000000000b40285",
+      "symbol": "report::TriggerNodeReport(v8::Isolate*, node::Environment*, char const*, char const*, std::string const&, v8::Local<v8::String>) [/root/.nvm/versions/node/v12.16.2/bin/node]"
+    },
+    {
+      "pc": "0x0000000000a033ef",
+      "symbol": "node::OnFatalError(char const*, char const*) [/root/.nvm/versions/node/v12.16.2/bin/node]"
+    },
+    {
+      "pc": "0x0000000000b76ffe",
+      "symbol": "v8::Utils::ReportOOMFailure(v8::internal::Isolate*, char const*, bool) [/root/.nvm/versions/node/v12.16.2/bin/node]"
+    },
+    {
+      "pc": "0x0000000000b77379",
+      "symbol": "v8::internal::V8::FatalProcessOutOfMemory(v8::internal::Isolate*, char const*, bool) [/root/.nvm/versions/node/v12.16.2/bin/node]"
+    },
+    {
+      "pc": "0x0000000000d23ad5",
+      "symbol": " [/root/.nvm/versions/node/v12.16.2/bin/node]"
+    },
+    {
+      "pc": "0x0000000000d24166",
+      "symbol": "v8::internal::Heap::RecomputeLimits(v8::internal::GarbageCollector) [/root/.nvm/versions/node/v12.16.2/bin/node]"
+    },
+    {
+      "pc": "0x0000000000d309e5",
+      "symbol": "v8::internal::Heap::PerformGarbageCollection(v8::internal::GarbageCollector, v8::GCCallbackFlags) [/root/.nvm/versions/node/v12.16.2/bin/node]"
+    },
+    {
+      "pc": "0x0000000000d31895",
+      "symbol": "v8::internal::Heap::CollectGarbage(v8::internal::AllocationSpace, v8::internal::GarbageCollectionReason, v8::GCCallbackFlags) [/root/.nvm/versions/node/v12.16.2/bin/node]"
+    },
+    {
+      "pc": "0x0000000000d3434c",
+      "symbol": "v8::internal::Heap::AllocateRawWithRetryOrFail(int, v8::internal::AllocationType, v8::internal::AllocationOrigin, v8::internal::AllocationAlignment) [/root/.nvm/versions/node/v12.16.2/bin/node]"
+    },
+    {
+      "pc": "0x0000000000cfaf1b",
+      "symbol": "v8::internal::Factory::NewFillerObject(int, bool, v8::internal::AllocationType, v8::internal::AllocationOrigin) [/root/.nvm/versions/node/v12.16.2/bin/node]"
+    },
+    {
+      "pc": "0x000000000103d85e",
+      "symbol": "v8::internal::Runtime_AllocateInYoungGeneration(int, unsigned long*, v8::internal::Isolate*) [/root/.nvm/versions/node/v12.16.2/bin/node]"
+    },
+    {
+      "pc": "0x00000000013c03d9",
+      "symbol": " [/root/.nvm/versions/node/v12.16.2/bin/node]"
+    }
+  ],
+  "javascriptHeap": {
+    "totalMemory": 272896000,
+    "totalCommittedMemory": 269472072,
+    "usedMemory": 265528520,
+    "availableMemory": 12182712,
+    "memoryLimit": 281018368,
+    "heapSpaces": {
+      "read_only_space": {
+        "memorySize": 262144,
+        "committedMemory": 33088,
+        "capacity": 32808,
+        "used": 32808,
+        "available": 0
+      },
+      "new_space": {
+        "memorySize": 4194304,
+        "committedMemory": 1233584,
+        "capacity": 2094912,
+        "used": 181808,
+        "available": 1913104
+      },
+      "old_space": {
+        "memorySize": 241311744,
+        "committedMemory": 241251544,
+        "capacity": 238842784,
+        "used": 238790456,
+        "available": 52328
+      },
+      "code_space": {
+        "memorySize": 1740800,
+        "committedMemory": 1567360,
+        "capacity": 1430144,
+        "used": 1430144,
+        "available": 0
+      },
+      "map_space": {
+        "memorySize": 4984832,
+        "committedMemory": 4984320,
+        "capacity": 4845040,
+        "used": 4845040,
+        "available": 0
+      },
+      "large_object_space": {
+        "memorySize": 19779584,
+        "committedMemory": 19779584,
+        "capacity": 19703720,
+        "used": 19703720,
+        "available": 0
+      },
+      "code_large_object_space": {
+        "memorySize": 622592,
+        "committedMemory": 622592,
+        "capacity": 544544,
+        "used": 544544,
+        "available": 0
+      },
+      "new_large_object_space": {
+        "memorySize": 0,
+        "committedMemory": 0,
+        "capacity": 2094912,
+        "used": 0,
+        "available": 2094912
+      }
+    }
+  },
+  "resourceUsage": {
+    "userCpuSeconds": 47.8307,
+    "kernelCpuSeconds": 2.12781,
+    "cpuConsumptionPercent": 99.9171,
+    "maxRss": 340840448,
+    "pageFaults": {
+      "IORequired": 0,
+      "IONotRequired": 213289
+    },
+    "fsActivity": {
+      "reads": 7880,
+      "writes": 17584
+    }
+  },
+  "uvthreadResourceUsage": {
+    "userCpuSeconds": 24.5889,
+    "kernelCpuSeconds": 1.28365,
+    "cpuConsumptionPercent": 51.7451,
+    "fsActivity": {
+      "reads": 7296,
+      "writes": 64
+    }
+  },
+  "libuv": [
+  ],
+  "workers": [
+  ],
+  "environmentVariables": {
+    "npm_package_dependencies_redux_persist": "^6.0.0",
+    "MAIL": "/var/mail/root",
+    "USER": "root",
+    "SSH_CLIENT": "14.169.65.68 57512 22",
+    "npm_package_dependencies_node_sass": "4.14.1",
+    "npm_config_version_commit_hooks": "true",
+    "npm_config_user_agent": "yarn/1.22.10 npm/? node/v12.16.2 linux x64",
+    "npm_package_dependencies_react_infinite_scroll_component": "^6.1.0",
+    "npm_config_bin_links": "true",
+    "XDG_SESSION_TYPE": "tty",
+    "npm_node_execpath": "/root/.nvm/versions/node/v12.16.2/bin/node",
+    "npm_config_init_version": "1.0.0",
+    "SHLVL": "1",
+    "npm_package_dependencies_react_hook_form": "^7.11.1",
+    "HOME": "/root",
+    "OLDPWD": "/root",
+    "npm_package_browserslist_production_0": ">0.2%",
+    "NVM_BIN": "/root/.nvm/versions/node/v12.16.2/bin",
+    "SSH_TTY": "/dev/pts/0",
+    "npm_package_browserslist_production_1": "not dead",
+    "NVM_INC": "/root/.nvm/versions/node/v12.16.2/include/node",
+    "npm_package_browserslist_production_2": "not op_mini all",
+    "npm_package_dependencies_framer_motion": "^4.0.0",
+    "npm_package_dependencies__n8tb1t_use_scroll_position": "^2.0.3",
+    "npm_config_init_license": "MIT",
+    "YARN_WRAP_OUTPUT": "false",
+    "npm_config_version_tag_prefix": "v",
+    "npm_package_dependencies_redux_thunk": "^2.3.0",
+    "npm_package_dependencies_react_icons": "^3.0.0",
+    "npm_package_description": "## About",
+    "npm_package_dependencies_react_scripts": "4.0.3",
+    "npm_package_dependencies_react_router_dom": "^5.2.0",
+    "NVM_DIR": "/root/.nvm",
+    "npm_package_readmeFilename": "README.md",
+    "npm_package_dependencies__testing_library_react": "^10.2.1",
+    "npm_package_dependencies__byteclaw_use_overflow_scroll_position": "^1.0.3",
+    "LOGNAME": "root",
+    "_": "/root/.nvm/versions/node/v12.16.2/bin/yarn",
+    "npm_package_dependencies_redux_devtools_extension": "^2.13.9",
+    "npm_package_dependencies_query_string": "^7.0.1",
+    "npm_package_dependencies__emotion_react": "^11.0.0",
+    "npm_package_private": "true",
+    "XDG_SESSION_CLASS": "user",
+    "npm_config_registry": "https://registry.yarnpkg.com",
+    "TERM": "xterm-256color",
+    "XDG_SESSION_ID": "615",
+    "npm_package_scripts_start": "react-scripts --max_old_space_size=256 start",
+    "npm_config_ignore_scripts": "",
+    "npm_package_browserslist_development_0": "last 1 chrome version",
+    "npm_package_dependencies_axios": "^0.21.1",
+    "PATH": "/tmp/yarn--1627212446414-0.05759672507018743:/root/gyconverse-client/node_modules/.bin:/usr/local/share/.config/yarn/link/node_modules/.bin:/root/.nvm/versions/node/v12.16.2/libexec/lib/node_modules/npm/bin/node-gyp-bin:/root/.nvm/versions/node/v12.16.2/lib/node_modules/npm/bin/node-gyp-bin:/root/.nvm/versions/node/v12.16.2/bin/node_modules/npm/bin/node-gyp-bin:/root/.nvm/versions/node/v12.16.2/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+    "NODE": "/root/.nvm/versions/node/v12.16.2/bin/node",
+    "npm_package_browserslist_development_1": "last 1 firefox version",
+    "npm_package_name": "client",
+    "XDG_RUNTIME_DIR": "/run/user/0",
+    "npm_package_browserslist_development_2": "last 1 safari version",
+    "npm_package_dependencies_react_redux": "^7.2.4",
+    "npm_package_scripts_eject": "react-scripts eject",
+    "npm_package_dependencies_redux": "^4.1.0",
+    "npm_package_dependencies_react_dom": "^17.0.2",
+    "npm_package_dependencies_react_custom_scrollbars": "^4.2.1",
+    "npm_lifecycle_script": "react-scripts --max_old_space_size=256 build",
+    "npm_package_scripts_test": "react-scripts test",
+    "npm_config_version_git_message": "v%s",
+    "SHELL": "/bin/bash",
+    "npm_lifecycle_event": "build",
+    "npm_package_dependencies__testing_library_jest_dom": "^5.9.0",
+    "npm_package_version": "0.1.0",
+    "npm_config_argv": "{\"remain\":[],\"cooked\":[\"run\",\"build\"],\"original\":[\"build\"]}",
+    "npm_package_scripts_build": "react-scripts --max_old_space_size=256 build",
+    "npm_package_dependencies__testing_library_user_event": "^12.0.2",
+    "npm_package_dependencies_lodash": "^4.17.21",
+    "npm_config_version_git_tag": "true",
+    "npm_config_version_git_sign": "",
+    "npm_config_strict_ssl": "true",
+    "npm_package_dependencies__chakra_ui_react": "^1.0.0",
+    "PWD": "/root/gyconverse-client",
+    "npm_execpath": "/root/.nvm/versions/node/v12.16.2/lib/node_modules/yarn/bin/yarn.js",
+    "npm_package_dependencies__emotion_styled": "^11.0.0",
+    "SSH_CONNECTION": "14.169.65.68 57512 139.180.196.41 22",
+    "NVM_CD_FLAGS": "",
+    "npm_package_dependencies_socket_io_client": "^4.1.3",
+    "npm_package_dependencies_prop_types": "^15.7.2",
+    "npm_config_save_prefix": "^",
+    "npm_config_ignore_optional": "",
+    "npm_package_dependencies_web_vitals": "^0.2.2",
+    "INIT_CWD": "/root/gyconverse-client",
+    "npm_package_eslintConfig_extends": "react-app",
+    "npm_package_dependencies_react": "^17.0.2",
+    "BABEL_ENV": "production",
+    "NODE_ENV": "production",
+    "GENERATE_SOURCEMAP": "false",
+    "NODE_PATH": ""
+  },
+  "userLimits": {
+    "core_file_size_blocks": {
+      "soft": 0,
+      "hard": "unlimited"
+    },
+    "data_seg_size_kbytes": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "file_size_blocks": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "max_locked_memory_bytes": {
+      "soft": 67108864,
+      "hard": 67108864
+    },
+    "max_memory_size_kbytes": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "open_files": {
+      "soft": 1048576,
+      "hard": 1048576
+    },
+    "stack_size_bytes": {
+      "soft": 8388608,
+      "hard": "unlimited"
+    },
+    "cpu_time_seconds": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "max_user_processes": {
+      "soft": 3829,
+      "hard": 3829
+    },
+    "virtual_memory_kbytes": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    }
+  },
+  "sharedObjects": [
+    "linux-vdso.so.1",
+    "/lib/x86_64-linux-gnu/libdl.so.2",
+    "/lib/x86_64-linux-gnu/libstdc++.so.6",
+    "/lib/x86_64-linux-gnu/libm.so.6",
+    "/lib/x86_64-linux-gnu/libgcc_s.so.1",
+    "/lib/x86_64-linux-gnu/libpthread.so.0",
+    "/lib/x86_64-linux-gnu/libc.so.6",
+    "/lib64/ld-linux-x86-64.so.2",
+    "/root/gyconverse-client/node_modules/node-sass/vendor/linux-x64-72/binding.node"
+  ]
+}
