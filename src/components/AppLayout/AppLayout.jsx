@@ -5,7 +5,7 @@ import SideBar from "../SideBar/SideBar";
 
 const AppLayout = ({ children }) => {
   return (
-    <Flex width="100%" alignItems="center">
+    <Flex width="100%" alignItems="center" overflowY="hidden">
       <SideBar />
       <Conversation />
       {children}

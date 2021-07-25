@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { BsSearch } from "react-icons/bs";
+import AppScrollBar from "../AppScrollBar/AppScrollBar";
 import MotionDiv from "../MotionDiv/MotionDiv";
 import ConversationItem from "./ConversationItem/ConversationItem";
 
@@ -86,7 +87,7 @@ const Conversation = () => {
       position="sticky"
       height="100vh"
       boxShadow="0 4px 12px 0 rgba(0, 0, 0, 0.05)"
-      width="330px"
+      width="350px"
       alignItems="center"
       justifyContent="space-between"
       bg="gray.50"
@@ -108,23 +109,7 @@ const Conversation = () => {
         </InputGroup>
       </Flex>
       <Box height="1.5px" width="100%" bgColor="gray.200" />
-      <Stack
-        mt={4}
-        overflow="scroll"
-        maxHeight="85%"
-        css={{
-          "&::-webkit-scrollbar": {
-            width: "3px",
-          },
-          "&::-webkit-scrollbar-track": {
-            width: "6px",
-          },
-          "&::-webkit-scrollbar-thumb": {
-            background: "#cecece",
-            borderRadius: "24px",
-          },
-        }}
-      >
+      <AppScrollBar mt={4} overflow="scroll" pb={8} maxHeight="85%">
         {conversations.map((conv) => (
           <ConversationItem
             username={conv.username}
@@ -133,7 +118,7 @@ const Conversation = () => {
             onClick={() => console.log("press")}
           />
         ))}
-      </Stack>
+      </AppScrollBar>
     </MotionDiv>
   );
 };

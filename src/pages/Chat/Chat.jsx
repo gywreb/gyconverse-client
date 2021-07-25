@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react";
+import { Box, Flex, Stack } from "@chakra-ui/react";
 import React from "react";
 import AppLayout from "src/components/AppLayout/AppLayout";
 import ChatBox from "src/components/ChatBox/ChatBox";
@@ -44,28 +44,28 @@ const Chat = () => {
       avatar: null,
       owner: false,
     },
+    {
+      content: `This is a short message`,
+      avatar: "https://avatars.githubusercontent.com/gywreb",
+      owner: true,
+    },
   ];
 
   return (
     <AppLayout>
       <Flex
+        flexDirection="column"
         position="relative"
         width="100%"
-        flexDirection="column"
         alignItems="center"
+        height="100vh"
+        pb="70px"
+        pt="70px"
+        overflowX="hidden"
       >
-        <Flex
-          flexDirection="column"
-          width="100%"
-          alignItems="center"
-          justifyContent="flex-end"
-          bg="gray.200"
-          height="100vh"
-        >
-          <ChatHeader />
-          <ChatBox messages={messages} />
-          <ChatInput />
-        </Flex>
+        <ChatHeader />
+        <ChatBox messages={messages} />
+        <ChatInput />
       </Flex>
     </AppLayout>
   );

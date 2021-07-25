@@ -6,10 +6,11 @@ import { appColor } from "src/configs/styles";
 
 const ChatHeader = () => {
   return (
-    <Box width="100%" boxShadow="rgba(0, 0, 0, 0.45) 0px 10px 20px -20px">
+    <Box width="100%">
       <Flex
+        boxShadow="rgba(0, 0, 0, 0.45) 0px 10px 20px -20px"
         width="100%"
-        position="sticky"
+        position="absolute"
         height="70px"
         top="0"
         bgColor="gray.50"

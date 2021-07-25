@@ -9,7 +9,7 @@ const ChatInput = () => {
   return (
     <Box width="100%">
       <Flex
-        position="sticky"
+        position="absolute"
         bottom="0"
         bg="gray.50"
         width="100%"

@@ -2,6 +2,7 @@ import { useOverflowScrollPosition } from "@byteclaw/use-overflow-scroll-positio
 import { Box, chakra, Flex } from "@chakra-ui/react";
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
+import AppScrollBar from "../AppScrollBar/AppScrollBar";
 import ChatToBottomBtn from "../ChatToBottomBtn/ChatToBottomBtn";
 import LeftMessage from "../Message/LeftMessage/LeftMessage";
 import RightMessage from "../Message/RightMessage/RightMessage";
@@ -45,32 +46,54 @@ const ChatBox = ({ messages }) => {
 
   return (
     <Flex
-      ref={chatBox}
       flexDirection="column"
-      p={4}
-      overflow="scroll"
-      css={{
-        "&::-webkit-scrollbar": {
-          width: "3px",
-        },
-        "&::-webkit-scrollbar-track": {
-          width: "6px",
-        },
-        "&::-webkit-scrollbar-thumb": {
-          background: "#cecece",
-          borderRadius: "24px",
-        },
-      }}
+      overflowX="hidden"
+      bg="gray.200"
+      justifyContent="flex-end"
+      height="100%"
     >
-      <MessageTop ref={topMessage} />
-      {messages.map((message, index) =>
-        message.owner ? (
-          <RightMessage content={message.content} avatar={message.avatar} />
-        ) : (
-          <LeftMessage content={message.content} avatar={message.avatar} />
-        )
-      )}
-      <MessageAnchor ref={messageAnchor} />
+      <Box
+        p={4}
+        width="100%"
+        ref={chatBox}
+        overflowY="scroll"
+        css={{
+          "&:hover": {
+            "&::-webkit-scrollbar": {
+              visibility: "visible",
+            },
+            "&::-webkit-scrollbar-track": {
+              visibility: "visible",
+            },
+            "&::-webkit-scrollbar-thumb": {
+              visibility: "visible",
+            },
+          },
+          "&::-webkit-scrollbar": {
+            width: "8px",
+            visibility: "hidden",
+          },
+          "&::-webkit-scrollbar-track": {
+            width: "10px",
+            visibility: "hidden",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            background: "#A0AEC0",
+            borderRadius: "24px",
+            visibility: "hidden",
+          },
+        }}
+      >
+        <MessageTop ref={topMessage} />
+        {messages.map((message, index) =>
+          message.owner ? (
+            <RightMessage content={message.content} avatar={message.avatar} />
+          ) : (
+            <LeftMessage content={message.content} avatar={message.avatar} />
+          )
+        )}
+        <MessageAnchor ref={messageAnchor} />
+      </Box>
       {toBottomVisible && <ChatToBottomBtn onClick={handleToBottom} />}
     </Flex>
   );
