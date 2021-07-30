@@ -30,7 +30,7 @@ export const setSocketMessage = (message) => (dispatch) => {
 export const saveMessage = (message) => async (dispatch) => {
   dispatch({ type: SAVE_MESSAGE_REQUEST });
   try {
-    dispatch({ type: SAVE_MESSAGE, payload: { message: newMessage } });
+    dispatch({ type: SAVE_MESSAGE, payload: { message } });
     const {
       data: {
         data: { newMessage },
