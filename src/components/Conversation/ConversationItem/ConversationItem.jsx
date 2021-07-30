@@ -1,14 +1,23 @@
-import { Avatar, Box, Flex, Text } from "@chakra-ui/react";
+import { Avatar, Box, Button, Flex, IconButton, Text } from "@chakra-ui/react";
 import React from "react";
+import { RiChatSmile3Fill } from "react-icons/ri";
 import { appColor } from "src/configs/styles";
 
-const ConversationItem = ({ username, lastMessage, avatar, onClick }) => {
+const ConversationItem = ({
+  username,
+  lastMessage,
+  avatar,
+  singleRoom,
+  talked,
+  onClick,
+  isOnline,
+}) => {
   return (
     <Box
       cursor="pointer"
       _hover={{ bgColor: "gray.100" }}
       transition="0.15s ease-in-out"
-      onClick={onClick}
+      onClick={!talked ? null : onClick}
     >
       <Flex alignItems="center" justifyContent="space-between" padding={4}>
         <Flex maxWidth="70%" alignItems="center">
@@ -23,33 +32,33 @@ const ConversationItem = ({ username, lastMessage, avatar, onClick }) => {
               borderRadius: "50%",
               bottom: "0",
               left: "70%",
-              backgroundColor: appColor.online,
+              backgroundColor: isOnline ? appColor.online : "gray.500",
               borderWidth: "2px",
               borderColor: "white",
             }}
           />
-          <Box maxWidth="70%" ml={2}>
-            <Text isTruncated fontSize="lg">
-              {username ||
-                `This is a name Lorem ipsum dolor sit amet consectetur adipisicing
-              elit. Aspernatur ipsum eligendi rem id? Natus libero dignissimos,
-              asperiores, a itaque ipsam nemo obcaecati eveniet sit consectetur
-              in voluptate possimus debitis excepturi!`}
+          <Box maxWidth="90%" ml={2}>
+            <Text isTruncated fontSize="md">
+              {username || ``}
             </Text>
-            <Text isTruncated fontSize="md" color="gray.500">
-              {lastMessage ||
-                `This is a message Lorem ipsum dolor sit amet consectetur
-              adipisicing elit. Aspernatur ipsum eligendi rem id? Natus libero
-              dignissimos, asperiores, a itaque ipsam nemo obcaecati eveniet sit
-              consectetur in voluptate possimus debitis excepturi!`}
+            <Text isTruncated fontSize="sm" color="gray.500">
+              {talked && lastMessage ? lastMessage : `Let start chatting now`}
             </Text>
           </Box>
         </Flex>
-        <Box>
-          <Text fontSize="xs" color="gray.500">
-            4 hours ago
-          </Text>
-        </Box>
+        {!talked ? (
+          <Box>
+            <Button
+              leftIcon={<RiChatSmile3Fill color="white" />}
+              colorScheme="teal"
+              color="white"
+              size="sm"
+              iconSpacing={2}
+            >
+              Chat!
+            </Button>
+          </Box>
+        ) : null}
       </Flex>
     </Box>
   );

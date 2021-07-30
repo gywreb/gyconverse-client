@@ -7,11 +7,7 @@ const RightMessage = ({ content, avatar }) => {
       <Flex maxWidth="50%" alignSelf="flex-end" pt={4} pb={4} pl={6}>
         <Box p={4} borderRadius="8px" bgColor="teal.500" boxShadow="lg">
           <Text textAlign="right" color="white">
-            {content ||
-              `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Est omnis
-          atque cumque asperiores praesentium quibusdam perspiciatis. Numquam a
-          explicabo ea nisi neque illum fugit sit at dolorem, delectus maxime
-          nihil!`}
+            {content || ``}
           </Text>
         </Box>
         <Avatar

@@ -10,84 +10,47 @@ import {
   InputRightElement,
   Stack,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
+import { useEffect } from "react";
 import { BsSearch } from "react-icons/bs";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { ROUTE_KEY } from "src/configs/routes";
+import { Events, SocketService } from "src/services/SocketService";
+import { loadRoomHistory, setOnlineFriends } from "src/store/chat/actions";
 import AppScrollBar from "../AppScrollBar/AppScrollBar";
 import MotionDiv from "../MotionDiv/MotionDiv";
 import ConversationItem from "./ConversationItem/ConversationItem";
 
 const Conversation = () => {
-  const conversations = [
-    {
-      username: "username 1",
-      lastMessage: "This is a last message",
-      avatar: "https://avatars.githubusercontent.com/gywreb",
-    },
-    {
-      username: "username 2",
-      lastMessage: `This is a last message Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-      Excepturi culpa, in ullam non adipisci, quidem praesentium soluta corporis omnis et molestiae sunt?
-      Cupiditate consectetur sunt est deleniti facere quasi accusantium.`,
-      avatar: null,
-    },
-    {
-      username: "username 3",
-      lastMessage: "This is a last message",
-      avatar: "https://avatars.githubusercontent.com/gywreb",
-    },
-    {
-      username: "username 4",
-      lastMessage: `This is a last message Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-      Excepturi culpa, in ullam non adipisci, quidem praesentium soluta corporis omnis et molestiae sunt?
-      Cupiditate consectetur sunt est deleniti facere quasi accusantium.`,
-      avatar: null,
-    },
-    {
-      username: "username 5",
-      lastMessage: "This is a last message",
-      avatar: "https://avatars.githubusercontent.com/gywreb",
-    },
-    {
-      username: "username 6",
-      lastMessage: `This is a last message Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-        Excepturi culpa, in ullam non adipisci, quidem praesentium soluta corporis omnis et molestiae sunt?
-        Cupiditate consectetur sunt est deleniti facere quasi accusantium.`,
-      avatar: null,
-    },
-    {
-      username: "username 7",
-      lastMessage: "This is a last message",
-      avatar: "https://avatars.githubusercontent.com/gywreb",
-    },
-    {
-      username: "username 8",
-      lastMessage: `This is a last message Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-          Excepturi culpa, in ullam non adipisci, quidem praesentium soluta corporis omnis et molestiae sunt?
-          Cupiditate consectetur sunt est deleniti facere quasi accusantium.`,
-      avatar: null,
-    },
-    {
-      username: "username 8",
-      lastMessage: `This is a last message Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-          Excepturi culpa, in ullam non adipisci, quidem praesentium soluta corporis omnis et molestiae sunt?
-          Cupiditate consectetur sunt est deleniti facere quasi accusantium.`,
-      avatar: null,
-    },
-    {
-      username: "username 8",
-      lastMessage: `This is a last message Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-          Excepturi culpa, in ullam non adipisci, quidem praesentium soluta corporis omnis et molestiae sunt?
-          Cupiditate consectetur sunt est deleniti facere quasi accusantium.`,
-      avatar: null,
-    },
-  ];
+  const { userInfo } = useSelector((state) => state.auth);
+  const { onlineFriends } = useSelector((state) => state.chat);
+  const [singleRooms, setSingleRooms] = useState([]);
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const handleGetRoomHistory = async (friend) => {
+    dispatch(loadRoomHistory(friend));
+    SocketService.client.emit(Events.joinRoom, friend.singleRoom);
+    history.push(ROUTE_KEY.Chat);
+  };
+
+  useEffect(() => {
+    SocketService.client.on(Events.getOnlineUsers, (onlineUsers) => {
+      dispatch(setOnlineFriends(onlineUsers));
+    });
+    SocketService.client.on(Events.singleRoomsInfo, (singleRooms) => {
+      setSingleRooms(singleRooms);
+    });
+  }, [SocketService, dispatch]);
+
   return (
     <MotionDiv
       // motion="slideLeftIn"
       position="sticky"
       height="100vh"
       boxShadow="0 4px 12px 0 rgba(0, 0, 0, 0.05)"
-      width="350px"
+      width="33%"
       alignItems="center"
       justifyContent="space-between"
       bg="gray.50"
@@ -110,12 +73,20 @@ const Conversation = () => {
       </Flex>
       <Box height="1.5px" width="100%" bgColor="gray.200" />
       <AppScrollBar mt={4} overflow="scroll" pb={8} maxHeight="85%">
-        {conversations.map((conv) => (
+        {userInfo.friends.map((friend, index) => (
           <ConversationItem
-            username={conv.username}
-            lastMessage={conv.lastMessage}
-            avatar={conv.avatar}
-            onClick={() => console.log("press")}
+            key={index}
+            username={friend.username}
+            lastMessage={
+              (singleRooms.length ? singleRooms : userInfo.rooms).find(
+                (room) => room._id === friend.singleRoom
+              )?.lastMessage
+            }
+            avatar={friend.avatar}
+            talked={friend.talked}
+            singleRoom={friend.singleRoom}
+            onClick={() => handleGetRoomHistory(friend)}
+            isOnline={onlineFriends.includes(friend._id)}
           />
         ))}
       </AppScrollBar>

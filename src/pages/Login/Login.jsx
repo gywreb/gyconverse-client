@@ -21,13 +21,13 @@ import { AiFillEyeInvisible, AiFillEye } from "react-icons/all";
 import { ROUTE_KEY } from "../../configs/routes";
 import { motion } from "framer-motion";
 import MotionDiv from "../../components/MotionDiv/MotionDiv";
-import { Link } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import QueryString from "query-string";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "src/store/auth/actions";
 
-const Login = ({ history, location }) => {
+const Login = () => {
   const {
     register,
     handleSubmit,
@@ -39,14 +39,15 @@ const Login = ({ history, location }) => {
   const dispatch = useDispatch();
   const toast = useToast();
   const { loading } = useSelector((state) => state.auth);
+  const history = useHistory();
+  const location = useLocation();
 
   const onSubmit = async (values) => {
     dispatch(login(values, history, toast, reset));
   };
 
   useEffect(() => {
-    if (location && location.search) {
-      console.log(location.search);
+    if (location && location?.search) {
       const { email } = QueryString.parse(location.search);
       if (email) setValue("email", email, { shouldValidate: true });
     }
