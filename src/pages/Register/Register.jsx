@@ -19,12 +19,12 @@ import { MdEmail, MdLock, MdPerson } from "react-icons/md";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/all";
 import { ROUTE_KEY } from "../../configs/routes";
 import MotionDiv from "../../components/MotionDiv/MotionDiv";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import omit from "lodash/omit";
 import { useDispatch, useSelector } from "react-redux";
 import { register as registerApi } from "../../store/auth/actions";
 
-const Register = ({ history }) => {
+const Register = () => {
   const {
     register,
     handleSubmit,
@@ -37,6 +37,7 @@ const Register = ({ history }) => {
   const { loading } = useSelector((state) => state.auth);
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isShowConfirmPass, setIsShowConfirmPass] = useState(false);
+  const history = useHistory();
 
   const password = useRef({});
   password.current = watch("password", "");

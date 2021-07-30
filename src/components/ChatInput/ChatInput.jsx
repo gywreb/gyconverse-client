@@ -5,7 +5,7 @@ import { BsImage } from "react-icons/bs";
 import { CgAttachment } from "react-icons/cg";
 import { IoMdSend } from "react-icons/io";
 
-const ChatInput = () => {
+const ChatInput = ({ message, onChat, sendMessage, onClickSend }) => {
   return (
     <Box width="100%">
       <Flex
@@ -45,11 +45,15 @@ const ChatInput = () => {
               variant="filled"
               placeholder="Type your thougnt here..."
               isFullWidth
+              value={message}
+              onChange={(e) => onChat(e)}
+              onKeyDown={(e) => (e.key === "Enter" ? sendMessage() : null)}
             />
           </Flex>
           <Flex ml={2}>
             <Flex alignItems="center">
               <IconButton
+                onClick={onClickSend}
                 bgColor="gray.50"
                 icon={<Icon as={IoMdSend} color="teal.500" boxSize={8} />}
               />

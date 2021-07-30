@@ -15,13 +15,7 @@ const LeftMessage = ({ content, avatar }) => {
           mr={2}
         />
         <Box p={4} borderRadius="8px" bgColor="gray.50" boxShadow="lg">
-          <Text textAlign="left">
-            {content ||
-              `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Est omnis
-          atque cumque asperiores praesentium quibusdam perspiciatis. Numquam a
-          explicabo ea nisi neque illum fugit sit at dolorem, delectus maxime
-          nihil!`}
-          </Text>
+          <Text textAlign="left">{content || ``}</Text>
         </Box>
       </Flex>
     </Flex>

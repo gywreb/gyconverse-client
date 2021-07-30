@@ -6,6 +6,7 @@ import AppScrollBar from "../AppScrollBar/AppScrollBar";
 import ChatToBottomBtn from "../ChatToBottomBtn/ChatToBottomBtn";
 import LeftMessage from "../Message/LeftMessage/LeftMessage";
 import RightMessage from "../Message/RightMessage/RightMessage";
+import MotionDiv from "../MotionDiv/MotionDiv";
 
 const MessageAnchor = chakra("div", {
   // attach style props
@@ -21,7 +22,7 @@ const MessageTop = chakra("div", {
   },
 });
 
-const ChatBox = ({ messages }) => {
+const ChatBox = ({ messages, authUser }) => {
   const topMessage = useRef(null);
   const messageAnchor = useRef(null);
   const chatBox = useRef(null);
@@ -50,9 +51,12 @@ const ChatBox = ({ messages }) => {
       overflowX="hidden"
       bg="gray.200"
       justifyContent="flex-end"
+      width="100%"
       height="100%"
     >
-      <Box
+      <MotionDiv
+        motion="fadeIn"
+        duration={0.5}
         p={4}
         width="100%"
         ref={chatBox}
@@ -85,15 +89,20 @@ const ChatBox = ({ messages }) => {
         }}
       >
         <MessageTop ref={topMessage} />
-        {messages.map((message, index) =>
-          message.owner ? (
-            <RightMessage content={message.content} avatar={message.avatar} />
+        {messages?.map((message, index) =>
+          authUser._id === message.sender ? (
+            <RightMessage
+              content={message.content}
+              avatar={
+                message.avatar || "https://avatars.githubusercontent.com/gywreb"
+              }
+            />
           ) : (
             <LeftMessage content={message.content} avatar={message.avatar} />
           )
         )}
         <MessageAnchor ref={messageAnchor} />
-      </Box>
+      </MotionDiv>
       {toBottomVisible && <ChatToBottomBtn onClick={handleToBottom} />}
     </Flex>
   );

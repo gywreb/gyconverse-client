@@ -41,7 +41,7 @@ const SideBar = () => {
       left={0}
       height="100vh"
       boxShadow="0 4px 12px 0 rgba(0, 0, 0, 0.05)"
-      width="100px"
+      width="7%"
       justifyContent="space-between"
       bg="teal.500"
     >
@@ -55,8 +55,9 @@ const SideBar = () => {
       </Flex>
 
       <Stack mt={8} spacing={0}>
-        {(navigation.length ? navItems : navigation).map((nav) => (
+        {(navigation.length ? navItems : navigation).map((nav, index) => (
           <NavItem
+            key={index}
             active={
               location.pathname
                 ? nav.id === location.pathname

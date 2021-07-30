@@ -4,7 +4,7 @@ import { BsFillInfoCircleFill } from "react-icons/bs";
 import { IoMdVideocam } from "react-icons/io";
 import { appColor } from "src/configs/styles";
 
-const ChatHeader = () => {
+const ChatHeader = ({ avatar, roomName, isOnline }) => {
   return (
     <Box width="100%">
       <Flex
@@ -26,7 +26,7 @@ const ChatHeader = () => {
           <Avatar
             position="relative"
             size="md"
-            src="https://avatars.githubusercontent.com/gywreb"
+            src={avatar || ""}
             _after={{
               content: "''",
               position: "absolute",
@@ -35,17 +35,17 @@ const ChatHeader = () => {
               borderRadius: "50%",
               bottom: "0",
               left: "70%",
-              backgroundColor: appColor.online,
+              backgroundColor: isOnline ? appColor.online : "gray.500",
               borderWidth: "2px",
               borderColor: "white",
             }}
           />
           <Box maxWidth="70%" ml={2}>
             <Text isTruncated fontSize="lg">
-              This is a name
+              {roomName || ""}
             </Text>
             <Text isTruncated fontSize="md" color="gray.500">
-              Online
+              {isOnline ? "Online" : "Offline"}
             </Text>
           </Box>
         </Flex>
