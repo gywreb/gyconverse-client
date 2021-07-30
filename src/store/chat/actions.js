@@ -30,13 +30,13 @@ export const setSocketMessage = (message) => (dispatch) => {
 export const saveMessage = (message) => async (dispatch) => {
   dispatch({ type: SAVE_MESSAGE_REQUEST });
   try {
+    dispatch({ type: SAVE_MESSAGE, payload: { message: newMessage } });
+    SocketService.client.emit(Events.singleRoomChat, newMessage);
     const {
       data: {
         data: { newMessage },
       },
     } = await apiClient.post(SAVE_MESSAGE_ROUTE, message);
-    SocketService.client.emit(Events.singleRoomChat, newMessage);
-    dispatch({ type: SAVE_MESSAGE, payload: { message: newMessage } });
   } catch (error) {
     console.log(error);
     dispatch({ type: SAVE_MESSAGE_FAILURE, payload: { error } });
