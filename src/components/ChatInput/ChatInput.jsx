@@ -48,6 +48,7 @@ const ChatInput = ({ message, onChat, sendMessage, onClickSend }) => {
               value={message}
               onChange={(e) => onChat(e)}
               onKeyDown={(e) => (e.key === "Enter" ? sendMessage() : null)}
+              autocomplete="off"
             />
           </Flex>
           <Flex ml={2}>
