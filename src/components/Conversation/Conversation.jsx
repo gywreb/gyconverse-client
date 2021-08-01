@@ -30,6 +30,7 @@ const Conversation = () => {
   const history = useHistory();
 
   const handleGetRoomHistory = async (friend) => {
+    SocketService.leaveRoom();
     dispatch(loadRoomHistory(friend));
     SocketService.client.emit(Events.joinRoom, friend.singleRoom);
     history.push(ROUTE_KEY.Chat);

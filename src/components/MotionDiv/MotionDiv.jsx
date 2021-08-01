@@ -5,7 +5,13 @@ import { BoxProps } from "@chakra-ui/react";
 
 const MotionBox = chakra(motion.div);
 
-const MotionDiv = ({ motion, duration, children, ...componentProps }) => {
+const MotionDiv = ({
+  motion,
+  duration,
+  children,
+  innerRef,
+  ...componentProps
+}) => {
   const defaultSetting = {
     duration: 0.3,
   };
@@ -86,6 +92,7 @@ const MotionDiv = ({ motion, duration, children, ...componentProps }) => {
       animate="enter"
       exit="exit"
       variants={animations[motion]}
+      ref={innerRef}
       {...componentProps}
     >
       {children}

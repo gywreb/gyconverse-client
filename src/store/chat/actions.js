@@ -30,13 +30,13 @@ export const setSocketMessage = (message) => (dispatch) => {
 export const saveMessage = (message) => async (dispatch) => {
   dispatch({ type: SAVE_MESSAGE_REQUEST });
   try {
+    dispatch({ type: SAVE_MESSAGE, payload: { message } });
+    SocketService.client.emit(Events.singleRoomChat, message);
     const {
       data: {
         data: { newMessage },
       },
     } = await apiClient.post(SAVE_MESSAGE_ROUTE, message);
-    SocketService.client.emit(Events.singleRoomChat, newMessage);
-    dispatch({ type: SAVE_MESSAGE, payload: { message: newMessage } });
   } catch (error) {
     console.log(error);
     dispatch({ type: SAVE_MESSAGE_FAILURE, payload: { error } });
@@ -46,6 +46,7 @@ export const saveMessage = (message) => async (dispatch) => {
 export const loadRoomHistory = (targetRoom) => async (dispatch) => {
   dispatch({ type: LOAD_ROOM_HISTORY_REQUEST });
   try {
+    SocketService.currentSocketRoom = targetRoom;
     const {
       data: {
         data: { messages },
