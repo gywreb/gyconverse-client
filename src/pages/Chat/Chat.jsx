@@ -1,5 +1,6 @@
 import { Box, Flex, Spinner, Stack } from "@chakra-ui/react";
 import React from "react";
+import { useRef } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,18 +23,27 @@ const Chat = () => {
   );
   const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const messageAnchor = useRef(null);
+
+  const handleToBottom = () => {
+    messageAnchor?.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
-    SocketService.client.on(Events.receiveSingleChat, (message) => {
-      console.log(message);
-      dispatch(setSocketMessage(message));
-    });
     if (!messages?.length && userInfo) {
       console.log(userInfo._id);
       let firstFriend = userInfo.friends[0];
       if (firstFriend.singleRoom) dispatch(loadRoomHistory(firstFriend));
       SocketService.client.emit(Events.joinRoom, firstFriend.singleRoom);
     }
+    SocketService.client.on(Events.receiveSingleChat, (message) => {
+      if (message.room === SocketService.currentSocketRoom?.singleRoom) {
+        dispatch(setSocketMessage(message));
+        setTimeout(() => {
+          messageAnchor?.current?.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      }
+    });
     return () => {
       SocketService.client.off(Events.receiveSingleChat);
     };
@@ -55,52 +65,10 @@ const Chat = () => {
     };
     dispatch(saveMessage(newMessage));
     setMessage("");
+    setTimeout(() => {
+      messageAnchor?.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
   };
-
-  // const messages = [
-  //   {
-  //     content: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Est omnis
-  //   atque cumque asperiores praesentium quibusdam perspiciatis. Numquam a
-  //   explicabo ea nisi neque illum fugit sit at dolorem, delectus maxime
-  //   nihil!`,
-  //     avatar: "https://avatars.githubusercontent.com/gywreb",
-  //     owner: true,
-  //   },
-  //   {
-  //     content: `This is a short message`,
-  //     avatar: null,
-  //     owner: false,
-  //   },
-  //   {
-  //     content: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Est omnis
-  //     atque cumque asperiores praesentium quibusdam perspiciatis. Numquam a
-  //     explicabo ea nisi neque illum fugit sit at dolorem, delectus maxime
-  //     nihil!`,
-  //     avatar: null,
-  //     owner: false,
-  //   },
-  //   {
-  //     content: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Est omnis
-  //   atque cumque asperiores praesentium quibusdam perspiciatis. Numquam a
-  //   explicabo ea nisi neque illum fugit sit at dolorem, delectus maxime
-  //   nihil!`,
-  //     avatar: "https://avatars.githubusercontent.com/gywreb",
-  //     owner: true,
-  //   },
-  //   {
-  //     content: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Est omnis
-  //     atque cumque asperiores praesentium quibusdam perspiciatis. Numquam a
-  //     explicabo ea nisi neque illum fugit sit at dolorem, delectus maxime
-  //     nihil!`,
-  //     avatar: null,
-  //     owner: false,
-  //   },
-  //   {
-  //     content: `This is a short message`,
-  //     avatar: "https://avatars.githubusercontent.com/gywreb",
-  //     owner: true,
-  //   },
-  // ];
 
   return (
     <AppLayout>
@@ -130,7 +98,11 @@ const Chat = () => {
             <Spinner color="teal.500" boxSize={32} thickness="6px" />
           </Flex>
         ) : (
-          <ChatBox messages={messages} authUser={userInfo} />
+          <ChatBox
+            authUser={userInfo}
+            messageAnchor={messageAnchor}
+            handleToBottom={handleToBottom}
+          />
         )}
         <ChatInput
           onChat={handleChat}

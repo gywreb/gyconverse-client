@@ -46,6 +46,7 @@ export const saveMessage = (message) => async (dispatch) => {
 export const loadRoomHistory = (targetRoom) => async (dispatch) => {
   dispatch({ type: LOAD_ROOM_HISTORY_REQUEST });
   try {
+    SocketService.currentSocketRoom = targetRoom;
     const {
       data: {
         data: { messages },

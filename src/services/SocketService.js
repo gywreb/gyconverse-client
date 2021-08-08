@@ -19,6 +19,7 @@ export const Events = {
 
 export class SocketService {
   static client = null;
+  static currentSocketRoom = null;
   static clientInit() {
     SocketService.client = io(baseURL);
   }

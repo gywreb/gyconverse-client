@@ -2,6 +2,7 @@ import { useOverflowScrollPosition } from "@byteclaw/use-overflow-scroll-positio
 import { Box, chakra, Flex } from "@chakra-ui/react";
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import AppScrollBar from "../AppScrollBar/AppScrollBar";
 import ChatToBottomBtn from "../ChatToBottomBtn/ChatToBottomBtn";
 import LeftMessage from "../Message/LeftMessage/LeftMessage";
@@ -12,6 +13,8 @@ const MessageAnchor = chakra("div", {
   // attach style props
   baseStyle: {
     width: "100%",
+    display: "flex",
+    boxSize: 4,
   },
 });
 
@@ -22,12 +25,13 @@ const MessageTop = chakra("div", {
   },
 });
 
-const ChatBox = ({ messages, authUser }) => {
+const ChatBox = ({ authUser, messageAnchor, handleToBottom }) => {
   const topMessage = useRef(null);
-  const messageAnchor = useRef(null);
   const chatBox = useRef(null);
   const [scrollPosition, scrollHeight] = useOverflowScrollPosition(chatBox);
   const [toBottomVisible, setToBottomVisible] = useState(false);
+  let currentRenderSender = null;
+  const { messages } = useSelector((state) => state.chat);
 
   useEffect(() => {
     if (scrollPosition < scrollHeight * 0.8) {
@@ -39,11 +43,7 @@ const ChatBox = ({ messages, authUser }) => {
 
   useEffect(() => {
     messageAnchor?.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
-  const handleToBottom = () => {
-    messageAnchor?.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  }, []);
 
   return (
     <Flex
@@ -57,9 +57,11 @@ const ChatBox = ({ messages, authUser }) => {
       <MotionDiv
         motion="fadeIn"
         duration={0.5}
-        p={4}
+        pt={4}
+        pl={4}
+        pr={4}
         width="100%"
-        ref={chatBox}
+        innerRef={chatBox}
         overflowY="scroll"
         css={{
           "&:hover": {
@@ -89,18 +91,57 @@ const ChatBox = ({ messages, authUser }) => {
         }}
       >
         <MessageTop ref={topMessage} />
-        {messages?.map((message, index) =>
-          authUser._id === message.sender ? (
-            <RightMessage
-              content={message.content}
-              avatar={
-                message.avatar || "https://avatars.githubusercontent.com/gywreb"
-              }
-            />
-          ) : (
-            <LeftMessage content={message.content} avatar={message.avatar} />
-          )
-        )}
+        {messages?.slice(0, 25).map((message, index) => {
+          if (index === 0) {
+            currentRenderSender = message.sender;
+            return authUser._id === message.sender ? (
+              <RightMessage
+                content={message.content}
+                avatar={
+                  message.avatar ||
+                  "https://avatars.githubusercontent.com/gywreb"
+                }
+              />
+            ) : (
+              <LeftMessage content={message.content} avatar={message.avatar} />
+            );
+          } else {
+            if (message.sender === currentRenderSender) {
+              return authUser._id === message.sender ? (
+                <RightMessage
+                  content={message.content}
+                  avatar={
+                    message.avatar ||
+                    "https://avatars.githubusercontent.com/gywreb"
+                  }
+                  isContinuous
+                />
+              ) : (
+                <LeftMessage
+                  content={message.content}
+                  avatar={message.avatar}
+                  isContinuous
+                />
+              );
+            } else {
+              currentRenderSender = message.sender;
+              return authUser._id === message.sender ? (
+                <RightMessage
+                  content={message.content}
+                  avatar={
+                    message.avatar ||
+                    "https://avatars.githubusercontent.com/gywreb"
+                  }
+                />
+              ) : (
+                <LeftMessage
+                  content={message.content}
+                  avatar={message.avatar}
+                />
+              );
+            }
+          }
+        })}
         <MessageAnchor ref={messageAnchor} />
       </MotionDiv>
       {toBottomVisible && <ChatToBottomBtn onClick={handleToBottom} />}
