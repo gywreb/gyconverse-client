@@ -15,6 +15,12 @@ export const Events = {
   singleRoomsInfo: "singleRoomsInfo",
   joinRoom: "joinRoom",
   leaveRoom: "leaveRoom",
+  sendFriendRequest: "sendFriendRequest",
+  receiveFriendRequest: "receiveFriendRequest",
+  acceptFriendRequest: "acceptFriendRequest",
+  alertAcceptFriendRequest: "alertAcceptFriendRequest",
+  sendChatInvite: "sendChatInvite",
+  receiveChatInvite: "receiveChatInvite",
 };
 
 export class SocketService {

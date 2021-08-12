@@ -9,6 +9,7 @@ import {
   InputRightAddon,
   InputRightElement,
   Stack,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useEffect } from "react";
@@ -17,6 +18,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { ROUTE_KEY } from "src/configs/routes";
 import { Events, SocketService } from "src/services/SocketService";
+import {
+  sendChatInvite,
+  updateFriendListByChatInvite,
+} from "src/store/auth/actions";
 import { loadRoomHistory, setOnlineFriends } from "src/store/chat/actions";
 import AppScrollBar from "../AppScrollBar/AppScrollBar";
 import MotionDiv from "../MotionDiv/MotionDiv";
@@ -28,6 +33,7 @@ const Conversation = () => {
   const [singleRooms, setSingleRooms] = useState([]);
   const dispatch = useDispatch();
   const history = useHistory();
+  const toast = useToast();
 
   const handleGetRoomHistory = async (friend) => {
     SocketService.leaveRoom();
@@ -37,13 +43,24 @@ const Conversation = () => {
   };
 
   useEffect(() => {
+    SocketService.client.on(Events.receiveChatInvite, (invite) => {
+      dispatch(updateFriendListByChatInvite(invite));
+    });
     SocketService.client.on(Events.getOnlineUsers, (onlineUsers) => {
       dispatch(setOnlineFriends(onlineUsers));
     });
     SocketService.client.on(Events.singleRoomsInfo, (singleRooms) => {
       setSingleRooms(singleRooms);
     });
-  }, [SocketService, dispatch]);
+  }, []);
+
+  const handleSendChatInvite = (friend) => {
+    let room = {
+      roomName: `${userInfo.username}-${friend.username}`,
+      members: [userInfo._id, friend._id],
+    };
+    dispatch(sendChatInvite(userInfo, friend, room, toast, history));
+  };
 
   return (
     <MotionDiv
@@ -88,6 +105,7 @@ const Conversation = () => {
             singleRoom={friend.singleRoom}
             onClick={() => handleGetRoomHistory(friend)}
             isOnline={onlineFriends.includes(friend._id)}
+            handleSendChatInvite={() => handleSendChatInvite(friend)}
           />
         ))}
       </AppScrollBar>

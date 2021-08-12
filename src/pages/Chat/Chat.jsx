@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import AppLayout from "src/components/AppLayout/AppLayout";
 import ChatBox from "src/components/ChatBox/ChatBox";
 import ChatHeader from "src/components/ChatHeader/ChatHeader";
@@ -24,13 +25,14 @@ const Chat = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const messageAnchor = useRef(null);
+  const location = useLocation();
 
   const handleToBottom = () => {
     messageAnchor?.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
-    if (!messages?.length && userInfo) {
+    if (location?.state?.isChatInit) {
       console.log(userInfo._id);
       let firstFriend = userInfo.friends[0];
       if (firstFriend.singleRoom) dispatch(loadRoomHistory(firstFriend));

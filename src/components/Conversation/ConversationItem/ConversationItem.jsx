@@ -11,6 +11,7 @@ const ConversationItem = ({
   talked,
   onClick,
   isOnline,
+  handleSendChatInvite,
 }) => {
   return (
     <Box
@@ -54,6 +55,7 @@ const ConversationItem = ({
               color="white"
               size="sm"
               iconSpacing={2}
+              onClick={handleSendChatInvite}
             >
               Chat!
             </Button>
