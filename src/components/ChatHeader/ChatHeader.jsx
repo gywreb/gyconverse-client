@@ -4,7 +4,7 @@ import { BsFillInfoCircleFill } from "react-icons/bs";
 import { IoMdVideocam } from "react-icons/io";
 import { appColor } from "src/configs/styles";
 
-const ChatHeader = ({ avatar, roomName, isOnline }) => {
+const ChatHeader = ({ avatar, roomName, isOnline, handleVideoCall }) => {
   return (
     <Box width="100%">
       <Flex
@@ -54,6 +54,7 @@ const ChatHeader = ({ avatar, roomName, isOnline }) => {
             ml={4}
             bgColor="gray.50"
             icon={<Icon as={IoMdVideocam} color="teal.500" boxSize={8} />}
+            onClick={handleVideoCall}
           />
           <IconButton
             bgColor="gray.50"

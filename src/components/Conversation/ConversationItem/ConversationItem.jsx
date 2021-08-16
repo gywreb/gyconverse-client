@@ -11,9 +11,12 @@ const ConversationItem = ({
   talked,
   onClick,
   isOnline,
+  handleSendChatInvite,
+  isChatting,
 }) => {
   return (
     <Box
+      bg={isChatting ? "gray.100" : "white"}
       cursor="pointer"
       _hover={{ bgColor: "gray.100" }}
       transition="0.15s ease-in-out"
@@ -54,6 +57,7 @@ const ConversationItem = ({
               color="white"
               size="sm"
               iconSpacing={2}
+              onClick={handleSendChatInvite}
             >
               Chat!
             </Button>

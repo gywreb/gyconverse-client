@@ -9,6 +9,7 @@ import GroupChat from "src/pages/GroupChat/GroupChat";
 import Home from "src/pages/Home/Home";
 import Login from "src/pages/Login/Login";
 import Register from "src/pages/Register/Register";
+import VideoCall from "src/pages/VideoCall/VideoCall";
 import { SocketService } from "src/services/SocketService";
 import { getCurrent } from "src/store/auth/actions";
 import { resetNavigation } from "src/store/navigation/actions";
@@ -52,6 +53,11 @@ const AuthProvider = () => {
           path={ROUTE_KEY.GroupChat}
           exact
           component={<GroupChat />}
+        />
+        <PrivateRoute
+          path={ROUTE_KEY.VideoCall}
+          exact
+          component={<VideoCall />}
         />
         <AuthRoute path={ROUTE_KEY.Login} exact component={<Login />} />
         <AuthRoute path={ROUTE_KEY.Register} exact component={<Register />} />

@@ -4,12 +4,14 @@ import { useRef } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory, useLocation } from "react-router-dom";
 import AppLayout from "src/components/AppLayout/AppLayout";
 import ChatBox from "src/components/ChatBox/ChatBox";
 import ChatHeader from "src/components/ChatHeader/ChatHeader";
 import ChatInput from "src/components/ChatInput/ChatInput";
 import MotionDiv from "src/components/MotionDiv/MotionDiv";
 import { MESSAGE_TYPE } from "src/configs/constants";
+import { ROUTE_KEY } from "src/configs/routes";
 import { Events, SocketService } from "src/services/SocketService";
 import {
   loadRoomHistory,
@@ -24,13 +26,15 @@ const Chat = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const messageAnchor = useRef(null);
+  const location = useLocation();
+  const history = useHistory();
 
   const handleToBottom = () => {
     messageAnchor?.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
-    if (!messages?.length && userInfo) {
+    if (location?.state?.isChatInit) {
       console.log(userInfo._id);
       let firstFriend = userInfo.friends[0];
       if (firstFriend.singleRoom) dispatch(loadRoomHistory(firstFriend));
@@ -70,6 +74,10 @@ const Chat = () => {
     }, 100);
   };
 
+  const handleVideoCall = () => {
+    history.push(ROUTE_KEY.VideoCall);
+  };
+
   return (
     <AppLayout>
       <Flex
@@ -86,6 +94,7 @@ const Chat = () => {
           isOnline={onlineFriends.includes(currentRoom?._id)}
           avatar={currentRoom?.avatar}
           roomName={currentRoom?.username}
+          handleVideoCall={() => handleVideoCall()}
         />
         {loadingHistory ? (
           <Flex

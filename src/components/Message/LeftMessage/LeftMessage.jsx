@@ -12,7 +12,7 @@ const LeftMessage = ({ content, avatar, isContinuous }) => {
         pb={2}
         pr={6}
       >
-        <Box maxWidth="10%" mr={2}>
+        <Flex maxWidth="10%" mr={2}>
           <Avatar
             alignSelf="flex-end"
             size="md"
@@ -22,7 +22,7 @@ const LeftMessage = ({ content, avatar, isContinuous }) => {
             boxShadow="lg"
             opacity={isContinuous ? 0 : 1}
           />
-        </Box>
+        </Flex>
         <Flex
           maxWidth="90%"
           p={4}

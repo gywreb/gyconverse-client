@@ -5,4 +5,5 @@ export const ROUTE_KEY = {
   Chat: "/chat",
   GroupChat: "/group",
   Profile: "/profile",
+  VideoCall: "/videocall",
 };

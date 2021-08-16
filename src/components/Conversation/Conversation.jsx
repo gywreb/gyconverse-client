@@ -9,14 +9,19 @@ import {
   InputRightAddon,
   InputRightElement,
   Stack,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { BsSearch } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { ROUTE_KEY } from "src/configs/routes";
 import { Events, SocketService } from "src/services/SocketService";
+import {
+  sendChatInvite,
+  updateFriendListByChatInvite,
+} from "src/store/auth/actions";
 import { loadRoomHistory, setOnlineFriends } from "src/store/chat/actions";
 import AppScrollBar from "../AppScrollBar/AppScrollBar";
 import MotionDiv from "../MotionDiv/MotionDiv";
@@ -24,10 +29,12 @@ import ConversationItem from "./ConversationItem/ConversationItem";
 
 const Conversation = () => {
   const { userInfo } = useSelector((state) => state.auth);
-  const { onlineFriends } = useSelector((state) => state.chat);
+  const { onlineFriends, currentRoom } = useSelector((state) => state.chat);
   const [singleRooms, setSingleRooms] = useState([]);
   const dispatch = useDispatch();
   const history = useHistory();
+  const location = useLocation();
+  const toast = useToast();
 
   const handleGetRoomHistory = async (friend) => {
     SocketService.leaveRoom();
@@ -37,13 +44,24 @@ const Conversation = () => {
   };
 
   useEffect(() => {
+    SocketService.client.on(Events.receiveChatInvite, (invite) => {
+      dispatch(updateFriendListByChatInvite(invite));
+    });
     SocketService.client.on(Events.getOnlineUsers, (onlineUsers) => {
       dispatch(setOnlineFriends(onlineUsers));
     });
     SocketService.client.on(Events.singleRoomsInfo, (singleRooms) => {
       setSingleRooms(singleRooms);
     });
-  }, [SocketService, dispatch]);
+  }, []);
+
+  const handleSendChatInvite = (friend) => {
+    let room = {
+      roomName: `${userInfo.username}-${friend.username}`,
+      members: [userInfo._id, friend._id],
+    };
+    dispatch(sendChatInvite(userInfo, friend, room, toast, history));
+  };
 
   return (
     <MotionDiv
@@ -74,22 +92,29 @@ const Conversation = () => {
       </Flex>
       <Box height="1.5px" width="100%" bgColor="gray.200" />
       <AppScrollBar mt={4} overflow="scroll" pb={8} maxHeight="85%">
-        {userInfo.friends.map((friend, index) => (
-          <ConversationItem
-            key={index}
-            username={friend.username}
-            lastMessage={
-              (singleRooms.length ? singleRooms : userInfo.rooms).find(
-                (room) => room._id === friend.singleRoom
-              )?.lastMessage
-            }
-            avatar={friend.avatar}
-            talked={friend.talked}
-            singleRoom={friend.singleRoom}
-            onClick={() => handleGetRoomHistory(friend)}
-            isOnline={onlineFriends.includes(friend._id)}
-          />
-        ))}
+        {userInfo.friends.map((friend, index) => {
+          return (
+            <ConversationItem
+              key={index}
+              username={friend.username}
+              lastMessage={
+                (singleRooms.length ? singleRooms : userInfo.rooms).find(
+                  (room) => room._id === friend.singleRoom
+                )?.lastMessage
+              }
+              avatar={friend.avatar}
+              talked={friend.talked}
+              singleRoom={friend.singleRoom}
+              onClick={() => handleGetRoomHistory(friend)}
+              isOnline={onlineFriends.includes(friend._id)}
+              handleSendChatInvite={() => handleSendChatInvite(friend)}
+              isChatting={
+                friend.singleRoom === currentRoom.singleRoom &&
+                location.pathname === ROUTE_KEY.Chat
+              }
+            />
+          );
+        })}
       </AppScrollBar>
     </MotionDiv>
   );
