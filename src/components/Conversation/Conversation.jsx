@@ -109,7 +109,7 @@ const Conversation = () => {
               isOnline={onlineFriends.includes(friend._id)}
               handleSendChatInvite={() => handleSendChatInvite(friend)}
               isChatting={
-                friend.singleRoom === currentRoom.singleRoom &&
+                friend.singleRoom === currentRoom?.singleRoom &&
                 location.pathname === ROUTE_KEY.Chat
               }
             />
