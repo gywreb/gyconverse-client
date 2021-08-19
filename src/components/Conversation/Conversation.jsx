@@ -22,14 +22,20 @@ import {
   sendChatInvite,
   updateFriendListByChatInvite,
 } from "src/store/auth/actions";
-import { loadRoomHistory, setOnlineFriends } from "src/store/chat/actions";
+import {
+  loadRoomHistory,
+  setInCallingFriends,
+  setInVidCallFriends,
+  setOnlineFriends,
+} from "src/store/chat/actions";
 import AppScrollBar from "../AppScrollBar/AppScrollBar";
 import MotionDiv from "../MotionDiv/MotionDiv";
 import ConversationItem from "./ConversationItem/ConversationItem";
 
 const Conversation = () => {
   const { userInfo } = useSelector((state) => state.auth);
-  const { onlineFriends, currentRoom } = useSelector((state) => state.chat);
+  const { onlineFriends, currentRoom, inCallingFriends, inVidCallFriends } =
+    useSelector((state) => state.chat);
   const [singleRooms, setSingleRooms] = useState([]);
   const dispatch = useDispatch();
   const history = useHistory();
@@ -40,7 +46,7 @@ const Conversation = () => {
     SocketService.leaveRoom();
     dispatch(loadRoomHistory(friend));
     SocketService.client.emit(Events.joinRoom, friend.singleRoom);
-    history.push(ROUTE_KEY.Chat);
+    history.replace(ROUTE_KEY.Chat);
   };
 
   useEffect(() => {
@@ -52,6 +58,14 @@ const Conversation = () => {
     });
     SocketService.client.on(Events.singleRoomsInfo, (singleRooms) => {
       setSingleRooms(singleRooms);
+    });
+
+    // vid call status
+    SocketService.client.on(Events.getInCallingUsers, (inCallingUsers) => {
+      dispatch(setInCallingFriends(inCallingUsers));
+    });
+    SocketService.client.on(Events.getInVidCallUsers, (inVidCallUsers) => {
+      dispatch(setInVidCallFriends(inVidCallUsers));
     });
   }, []);
 
@@ -107,10 +121,12 @@ const Conversation = () => {
               singleRoom={friend.singleRoom}
               onClick={() => handleGetRoomHistory(friend)}
               isOnline={onlineFriends.includes(friend._id)}
+              isInCalling={inCallingFriends.includes(friend._id)}
+              isInVidCall={inVidCallFriends.includes(friend._id)}
               handleSendChatInvite={() => handleSendChatInvite(friend)}
               isChatting={
-                friend.singleRoom === currentRoom.singleRoom &&
-                location.pathname === ROUTE_KEY.Chat
+                friend?.singleRoom === currentRoom?.singleRoom &&
+                location?.pathname === ROUTE_KEY.Chat
               }
             />
           );

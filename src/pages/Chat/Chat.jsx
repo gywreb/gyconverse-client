@@ -1,4 +1,4 @@
-import { Box, Flex, Spinner, Stack } from "@chakra-ui/react";
+import { Flex, Spinner, useToast } from "@chakra-ui/react";
 import React from "react";
 import { useRef } from "react";
 import { useState } from "react";
@@ -9,7 +9,6 @@ import AppLayout from "src/components/AppLayout/AppLayout";
 import ChatBox from "src/components/ChatBox/ChatBox";
 import ChatHeader from "src/components/ChatHeader/ChatHeader";
 import ChatInput from "src/components/ChatInput/ChatInput";
-import MotionDiv from "src/components/MotionDiv/MotionDiv";
 import { MESSAGE_TYPE } from "src/configs/constants";
 import { ROUTE_KEY } from "src/configs/routes";
 import { Events, SocketService } from "src/services/SocketService";
@@ -20,18 +19,41 @@ import {
 } from "src/store/chat/actions";
 
 const Chat = () => {
-  const { messages, loadingHistory, currentRoom, onlineFriends } = useSelector(
-    (state) => state.chat
-  );
+  const {
+    inCallingFriends,
+    inVidCallFriends,
+    loadingHistory,
+    currentRoom,
+    onlineFriends,
+  } = useSelector((state) => state.chat);
   const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const messageAnchor = useRef(null);
   const location = useLocation();
   const history = useHistory();
+  const toast = useToast();
 
   const handleToBottom = () => {
     messageAnchor?.current?.scrollIntoView({ behavior: "smooth" });
   };
+
+  useEffect(() => {
+    if (location.state?.sendCallFinishMess) {
+      location.state.sendCallFinishMess = false;
+      const newMessage = {
+        type: MESSAGE_TYPE.VIDEO_CALL,
+        room: currentRoom?.singleRoom,
+        sender: userInfo._id,
+        content: location.state.content,
+      };
+      setTimeout(() => {
+        dispatch(saveMessage(newMessage));
+        setTimeout(() => {
+          messageAnchor?.current?.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      }, 500);
+    }
+  }, [location.state]);
 
   useEffect(() => {
     if (location?.state?.isChatInit) {
@@ -74,8 +96,39 @@ const Chat = () => {
     }, 100);
   };
 
-  const handleVideoCall = () => {
-    history.push(ROUTE_KEY.VideoCall);
+  const handleVideoCall = (currentRoom, isOnline, isInCalling, isInVidCall) => {
+    if (currentRoom && userInfo) {
+      if (!isOnline) {
+        toast({
+          title: `${currentRoom.username} is offline at the moment, try calling ${currentRoom.username} again later!`,
+          position: "top",
+          status: "warning",
+          duration: 20000,
+          isClosable: true,
+        });
+      } else if (isInVidCall) {
+        toast({
+          title: `${currentRoom.username} is in video call with someone, try calling ${currentRoom.username} again later!`,
+          position: "top",
+          status: "error",
+          duration: 20000,
+          isClosable: true,
+        });
+      } else if (isInCalling) {
+        toast({
+          title: `${currentRoom.username} is calling someone, try calling ${currentRoom.username} again later!`,
+          position: "top",
+          status: "warning",
+          duration: 20000,
+          isClosable: true,
+        });
+      } else {
+        history.replace({
+          pathname: ROUTE_KEY.VideoCall,
+          state: { isCallInitiator: true, isVideoCall: true },
+        });
+      }
+    }
   };
 
   return (
@@ -92,9 +145,18 @@ const Chat = () => {
       >
         <ChatHeader
           isOnline={onlineFriends.includes(currentRoom?._id)}
+          isInCalling={inCallingFriends.includes(currentRoom?._id)}
+          isInVidCall={inVidCallFriends.includes(currentRoom?._id)}
           avatar={currentRoom?.avatar}
           roomName={currentRoom?.username}
-          handleVideoCall={() => handleVideoCall()}
+          handleVideoCall={() =>
+            handleVideoCall(
+              currentRoom,
+              onlineFriends.includes(currentRoom?._id),
+              inCallingFriends.includes(currentRoom?._id),
+              inVidCallFriends.includes(currentRoom?._id)
+            )
+          }
         />
         {loadingHistory ? (
           <Flex

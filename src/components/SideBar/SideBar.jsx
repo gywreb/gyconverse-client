@@ -32,8 +32,8 @@ const SideBar = () => {
     dispatch(setActiveNavigation(id));
     if (id !== "logout") {
       if (routeKey === ROUTE_KEY.Chat)
-        history.push({ pathname: routeKey, state: { isChatInit: true } });
-      else history.push({ pathname: routeKey });
+        history.replace({ pathname: routeKey, state: { isChatInit: true } });
+      else history.replace({ pathname: routeKey });
     }
   };
 

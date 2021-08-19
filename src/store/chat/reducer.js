@@ -5,6 +5,10 @@ import {
   SAVE_MESSAGE,
   SAVE_MESSAGE_FAILURE,
   SAVE_MESSAGE_REQUEST,
+  SET_BACK_PREV_ROOM,
+  SET_CURRENT_ROOM,
+  SET_INCALLING_FRIENDS,
+  SET_INVIDEOCALL_FRIENDS,
   SET_ONLINE_FRIENDS,
   SET_SOCKET_MESSAGE,
 } from "./actions";
@@ -12,9 +16,12 @@ import {
 const initialState = {
   messages: [],
   currentRoom: null,
+  prevRoom: null,
   loadingHistory: false,
   error: null,
   onlineFriends: [],
+  inCallingFriends: [],
+  inVidCallFriends: [],
 };
 
 export default function chatReducer(state = initialState, action) {
@@ -56,10 +63,30 @@ export default function chatReducer(state = initialState, action) {
     case SET_ONLINE_FRIENDS: {
       return { ...state, onlineFriends: action.payload.onlineFriends };
     }
+    case SET_INCALLING_FRIENDS: {
+      return { ...state, inCallingFriends: action.payload.inCallingFriends };
+    }
+    case SET_INVIDEOCALL_FRIENDS: {
+      return { ...state, inVidCallFriends: action.payload.inVidCallFriends };
+    }
     case SET_SOCKET_MESSAGE: {
       return {
         ...state,
         messages: [...state.messages, action.payload.message],
+      };
+    }
+    case SET_CURRENT_ROOM: {
+      return {
+        ...state,
+        currentRoom: action.payload.currentRoom,
+        prevRoom: action.payload.prevRoom,
+      };
+    }
+    case SET_BACK_PREV_ROOM: {
+      return {
+        ...state,
+        currentRoom: action.payload.prevRoom,
+        prevRoom: null,
       };
     }
     default: {

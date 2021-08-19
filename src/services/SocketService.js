@@ -1,3 +1,4 @@
+import React from "react";
 import { io } from "socket.io-client";
 
 const baseURL =
@@ -21,11 +22,29 @@ export const Events = {
   alertAcceptFriendRequest: "alertAcceptFriendRequest",
   sendChatInvite: "sendChatInvite",
   receiveChatInvite: "receiveChatInvite",
+  sendCall: "sendCall",
+  receiveCall: "receiveCall",
+  acceptCall: "acceptCall",
+  answerCall: "answerCall",
+  denyCall: "denyCall",
+  denyCallReceive: "denyCallReceive",
+  leaveCall: "leaveCall",
+  leaveCallReceive: "leaveCallReceive",
+  cancelCall: "cancelCall",
+  cancelCallReceive: "cancelCallReceive",
+  getInCallingUsers: "getInCallingUsers",
+  getInVidCallUsers: "getInVidCallUsers",
 };
 
 export class SocketService {
   static client = null;
   static currentSocketRoom = null;
+  static authVideo = React.createRef(null);
+  static authVideoStream = null;
+  static userVideoStream = null;
+  static authPeer = null;
+  static userPeer = null;
+
   static clientInit() {
     SocketService.client = io(baseURL);
   }
@@ -40,5 +59,10 @@ export class SocketService {
   }
   static removeAllListeners() {
     SocketService.client.removeAllListeners();
+  }
+
+  static setAuthVideoStream(stream, authVideoRef) {
+    SocketService.authVideo = authVideoRef;
+    SocketService.authVideoStream = stream;
   }
 }
