@@ -7,16 +7,17 @@ const ConversationItem = ({
   username,
   lastMessage,
   avatar,
-  singleRoom,
   talked,
   onClick,
   isOnline,
+  isInCalling,
+  isInVidCall,
   handleSendChatInvite,
   isChatting,
 }) => {
   return (
     <Box
-      bg={isChatting ? "gray.100" : "white"}
+      bg={isChatting ? "gray.100" : "gray.50"}
       cursor="pointer"
       _hover={{ bgColor: "gray.100" }}
       transition="0.15s ease-in-out"
@@ -35,7 +36,13 @@ const ConversationItem = ({
               borderRadius: "50%",
               bottom: "0",
               left: "70%",
-              backgroundColor: isOnline ? appColor.online : "gray.500",
+              backgroundColor: isInVidCall
+                ? "red.400"
+                : isInCalling
+                ? "yellow.400"
+                : isOnline
+                ? appColor.online
+                : "gray.500",
               borderWidth: "2px",
               borderColor: "white",
             }}

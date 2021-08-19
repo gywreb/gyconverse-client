@@ -216,7 +216,7 @@ export const login =
       });
       dispatch({ type: LOGIN_SUCCESS, payload: { userInfo, token } });
       resetForm();
-      history.push({
+      history.replace({
         pathname: ROUTE_KEY.Home,
       });
     } catch (error) {
@@ -264,7 +264,7 @@ export const register =
       });
       dispatch({ type: REGISTER_SUCCESS });
       resetForm();
-      history.push({
+      history.replace({
         pathname: ROUTE_KEY.Login,
         search: `?email=${payload.email}`,
       });

@@ -96,6 +96,7 @@ const ChatBox = ({ authUser, messageAnchor, handleToBottom }) => {
             currentRenderSender = message.sender;
             return authUser._id === message.sender ? (
               <RightMessage
+                type={message.type}
                 content={message.content}
                 avatar={
                   message.avatar ||
@@ -103,12 +104,17 @@ const ChatBox = ({ authUser, messageAnchor, handleToBottom }) => {
                 }
               />
             ) : (
-              <LeftMessage content={message.content} avatar={message.avatar} />
+              <LeftMessage
+                type={message.type}
+                content={message.content}
+                avatar={message.avatar}
+              />
             );
           } else {
             if (message.sender === currentRenderSender) {
               return authUser._id === message.sender ? (
                 <RightMessage
+                  type={message.type}
                   content={message.content}
                   avatar={
                     message.avatar ||
@@ -118,6 +124,7 @@ const ChatBox = ({ authUser, messageAnchor, handleToBottom }) => {
                 />
               ) : (
                 <LeftMessage
+                  type={message.type}
                   content={message.content}
                   avatar={message.avatar}
                   isContinuous
@@ -127,6 +134,7 @@ const ChatBox = ({ authUser, messageAnchor, handleToBottom }) => {
               currentRenderSender = message.sender;
               return authUser._id === message.sender ? (
                 <RightMessage
+                  type={message.type}
                   content={message.content}
                   avatar={
                     message.avatar ||
@@ -135,6 +143,7 @@ const ChatBox = ({ authUser, messageAnchor, handleToBottom }) => {
                 />
               ) : (
                 <LeftMessage
+                  type={message.type}
                   content={message.content}
                   avatar={message.avatar}
                 />
