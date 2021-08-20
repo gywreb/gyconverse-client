@@ -23,6 +23,7 @@ import { timerFormat } from "src/utils/timerFormat";
 const Video = chakra("video", {
   baseStyle: {
     minWidth: "100%",
+    minHeight: "100%",
   },
 });
 
@@ -312,6 +313,7 @@ const VideoCall = () => {
       alignItems="center"
       height="100vh"
       overflowX="hidden"
+      overflowY="hidden"
     >
       <Flex
         alignItems="center"
@@ -320,6 +322,7 @@ const VideoCall = () => {
         height="100%"
         bg="gray.900"
         flexDirection="column"
+        overflowY="hidden"
         // pb={20}
       >
         <VideoCallHeader
@@ -338,7 +341,13 @@ const VideoCall = () => {
               <ThreeDotsWave />
             </>
           )}
-        <Video playsInline ref={userVideoRef} autoPlay position="absolute" />
+        <Video
+          playsInline
+          ref={userVideoRef}
+          autoPlay
+          position="absolute"
+          overflowY="hidden"
+        />
       </Flex>
       <AuthWebcam
         videoRef={authVideoRef}

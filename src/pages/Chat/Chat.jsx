@@ -53,7 +53,7 @@ const Chat = () => {
             messageAnchor?.current?.scrollIntoView({ behavior: "smooth" });
           }, 100);
         },
-        process.env.NODE_ENV === "development" ? 500 : 1500
+        process.env.NODE_ENV === "development" ? 500 : 2500
       );
     }
   }, [location.state]);
