@@ -46,12 +46,15 @@ const Chat = () => {
         sender: userInfo._id,
         content: location.state.content,
       };
-      setTimeout(() => {
-        dispatch(saveMessage(newMessage));
-        setTimeout(() => {
-          messageAnchor?.current?.scrollIntoView({ behavior: "smooth" });
-        }, 100);
-      }, 500);
+      setTimeout(
+        () => {
+          dispatch(saveMessage(newMessage));
+          setTimeout(() => {
+            messageAnchor?.current?.scrollIntoView({ behavior: "smooth" });
+          }, 100);
+        },
+        process.env.NODE_ENV === "development" ? 500 : 1500
+      );
     }
   }, [location.state]);
 
