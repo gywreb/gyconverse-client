@@ -15,7 +15,7 @@ import AuthWebcam from "src/components/AuthWebcam/AuthWebcam";
 import { useState } from "react";
 import VideoCallHeader from "src/components/VIdeoCallHeader/VideoCallHeader";
 import Peer from "simple-peer";
-import { MESSAGE_TYPE } from "src/configs/constants";
+import { AUDIO_TYPE, MESSAGE_TYPE } from "src/configs/constants";
 import { useStopwatch } from "react-timer-hook";
 import moment from "moment";
 import { timerFormat } from "src/utils/timerFormat";
@@ -39,7 +39,8 @@ const VideoCall = () => {
   const [isInCall, setIsInCall] = useState(false);
   const location = useLocation();
   const toast = useToast();
-  const [time, setTime] = useState("");
+  const [audioInputs, setAudioInputs] = useState([]);
+  const [audioOutputs, setAudioOutputs] = useState([]);
 
   const { seconds, minutes, hours, start } = useStopwatch({
     autoStart: false,
@@ -52,9 +53,12 @@ const VideoCall = () => {
       isInCall: isVidCall,
       isVideoCall,
     } = location.state;
-    if (!isVideoCall) {
-      history.replace(ROUTE_KEY.Home);
-    }
+
+    navigator.mediaDevices
+      .enumerateDevices()
+      .then(handleGetDevices)
+      .catch((err) => console.log(err));
+
     navigator.mediaDevices
       .getUserMedia({
         video: true,
@@ -122,6 +126,11 @@ const VideoCall = () => {
 
           connectionRef.current = peer;
         }
+        return navigator.mediaDevices.enumerateDevices();
+      })
+      .then(handleGetDevices)
+      .catch((err) => {
+        console.log(err);
       });
 
     SocketService.client.on(Events.denyCallReceive, (signal) => {
@@ -160,13 +169,14 @@ const VideoCall = () => {
       SocketService.client.off(Events.denyCallReceive);
       SocketService.client.off(Events.leaveCallReceive);
       location.state = undefined;
+      setAudioInputs([]);
+      setAudioOutputs([]);
     };
   }, []);
 
   const handleHangUp = () => {
     if (SocketService.authVideoStream) {
-      SocketService.authVideoStream.getAudioTracks()[0].stop();
-      SocketService.authVideoStream.getVideoTracks()[0].stop();
+      SocketService.authVideoStream.getTracks().map((track) => track.stop());
     }
     if (currentRoom && userInfo)
       SocketService.client.emit(Events.cancelCall, {
@@ -221,6 +231,83 @@ const VideoCall = () => {
     }
   };
 
+  const handleGetDevices = (devices) => {
+    let inputDevices = [];
+    let outputDevices = [];
+    devices.map((device, index) => {
+      if (device.kind === "audioinput") {
+        if (
+          device.deviceId.length !== 0 &&
+          device.deviceId !== "default" &&
+          !inputDevices.find((input) => input.deviceId === device.deviceId)
+        )
+          inputDevices.push(device);
+      } else if (device.kind === "audiooutput") {
+        if (
+          device.deviceId.length !== 0 &&
+          device.deviceId !== "default" &&
+          !outputDevices.find((output) => output.deviceId === device.deviceId)
+        )
+          outputDevices.push(device);
+      }
+    });
+    setAudioInputs([...inputDevices]);
+    setAudioOutputs([...outputDevices]);
+  };
+
+  const handleChangeAudioDevice = (e, type) => {
+    switch (type) {
+      case AUDIO_TYPE.INPUT: {
+        handleSwitchInputAudio(e.target.value);
+        break;
+      }
+      case AUDIO_TYPE.OUTPUT: {
+        handleSwitchOutputAudio(e.target.value);
+        break;
+      }
+      default:
+        break;
+    }
+  };
+
+  const handleSwitchOutputAudio = (deviceId) => {
+    if (authVideoRef.current !== "undefined") {
+      authVideoRef.current
+        .setSinkId(deviceId)
+        .then(() => {
+          console.log("switch success");
+        })
+        .catch((err) => console.log(err));
+    } else {
+      console.log("Error");
+    }
+  };
+
+  const handleSwitchInputAudio = (deviceId) => {
+    SocketService.authVideoStream.getTracks().map((track) => {
+      track.stop();
+    });
+    navigator.mediaDevices
+      .getUserMedia({
+        video: true,
+        audio: { deviceId: deviceId ? { exact: deviceId } : "undefined" },
+      })
+      .then((stream) => {
+        authVideoRef.current.srcObject = stream;
+        SocketService.setAuthVideoStream(stream, authVideoRef);
+        connectionRef.current.replaceTrack &&
+          connectionRef.current.replaceTrack(
+            connectionRef.current.streams[0].getAudioTracks()[0],
+            stream.getAudioTracks()[0],
+            connectionRef.current.streams[0]
+          );
+        return navigator.mediaDevices.enumerateDevices();
+      })
+      .then(handleGetDevices)
+      .catch((err) => console.log(err));
+    console.log(SocketService.authVideoStream);
+  };
+
   return (
     <Flex
       flexDirection="column"
@@ -268,6 +355,9 @@ const VideoCall = () => {
         handleControlMic={() => handleControlMic()}
         isVideoMute={isVideoMute}
         isMicMute={isMicMute}
+        audioInputs={audioInputs}
+        audioOutputs={audioOutputs}
+        handleChangeAudioDevice={handleChangeAudioDevice}
       />
     </Flex>
   );
