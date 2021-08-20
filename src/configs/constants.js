@@ -4,3 +4,8 @@ export const MESSAGE_TYPE = {
   IMAGE: "IMAGE",
   VIDEO_CALL: "VIDEO_CALL",
 };
+
+export const AUDIO_TYPE = {
+  INPUT: "INPUT",
+  OUTPUT: "OUTPUT",
+};

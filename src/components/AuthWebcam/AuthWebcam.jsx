@@ -19,6 +19,7 @@ const AuthWebcam = ({ videoRef }) => {
     >
       <Video
         playsInline
+        muted
         ref={videoRef}
         autoPlay
         minWidth="100%"
