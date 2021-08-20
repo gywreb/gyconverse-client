@@ -24,7 +24,6 @@ import { useHistory } from "react-router-dom";
 import { ROUTE_KEY } from "src/configs/routes";
 import { Events, SocketService } from "src/services/SocketService";
 import { setBackPrevRoom, setCurrentRoom } from "src/store/chat/actions";
-import gytone from "../../sound/gytone.mp3";
 
 const VideoCallNotiCard = ({}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
