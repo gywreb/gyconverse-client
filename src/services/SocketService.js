@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 const baseURL =
   process.env.NODE_ENV === "development"
     ? "http://localhost:5000"
-    : "http://139.180.196.41:8686";
+    : "https://gyconverse-server.xyz";
 
 export const Events = {
   connection: "connection",
