@@ -3,7 +3,6 @@ import { Box, chakra, Flex } from "@chakra-ui/react";
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import AppScrollBar from "../AppScrollBar/AppScrollBar";
 import ChatToBottomBtn from "../ChatToBottomBtn/ChatToBottomBtn";
 import LeftMessage from "../Message/LeftMessage/LeftMessage";
 import RightMessage from "../Message/RightMessage/RightMessage";
@@ -25,7 +24,12 @@ const MessageTop = chakra("div", {
   },
 });
 
-const ChatBox = ({ authUser, messageAnchor, handleToBottom }) => {
+const ChatBox = ({
+  authUser,
+  messageAnchor,
+  handleToBottom,
+  handleInteractMessage,
+}) => {
   const topMessage = useRef(null);
   const chatBox = useRef(null);
   const [scrollPosition, scrollHeight] = useOverflowScrollPosition(chatBox);
@@ -102,12 +106,18 @@ const ChatBox = ({ authUser, messageAnchor, handleToBottom }) => {
                   message.avatar ||
                   "https://avatars.githubusercontent.com/gywreb"
                 }
+                handleInteractMessage={() =>
+                  handleInteractMessage(message, message.type)
+                }
               />
             ) : (
               <LeftMessage
                 type={message.type}
                 content={message.content}
                 avatar={message.avatar}
+                handleInteractMessage={() =>
+                  handleInteractMessage(message, message.type)
+                }
               />
             );
           } else {
@@ -121,6 +131,9 @@ const ChatBox = ({ authUser, messageAnchor, handleToBottom }) => {
                     "https://avatars.githubusercontent.com/gywreb"
                   }
                   isContinuous
+                  handleInteractMessage={() =>
+                    handleInteractMessage(message, message.type)
+                  }
                 />
               ) : (
                 <LeftMessage
@@ -128,6 +141,9 @@ const ChatBox = ({ authUser, messageAnchor, handleToBottom }) => {
                   content={message.content}
                   avatar={message.avatar}
                   isContinuous
+                  handleInteractMessage={() =>
+                    handleInteractMessage(message, message.type)
+                  }
                 />
               );
             } else {
@@ -140,12 +156,18 @@ const ChatBox = ({ authUser, messageAnchor, handleToBottom }) => {
                     message.avatar ||
                     "https://avatars.githubusercontent.com/gywreb"
                   }
+                  handleInteractMessage={() =>
+                    handleInteractMessage(message, message.type)
+                  }
                 />
               ) : (
                 <LeftMessage
                   type={message.type}
                   content={message.content}
                   avatar={message.avatar}
+                  handleInteractMessage={() =>
+                    handleInteractMessage(message, message.type)
+                  }
                 />
               );
             }

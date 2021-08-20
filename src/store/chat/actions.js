@@ -1,4 +1,5 @@
 import apiClient from "src/configs/apiClient";
+import { MESSAGE_TYPE } from "src/configs/constants";
 import { Events, SocketService } from "src/services/SocketService";
 
 export const LOAD_ROOM_HISTORY = "@CHAT/LOAD_ROOM_HISTORY";
@@ -48,16 +49,26 @@ export const setSocketMessage = (message) => (dispatch) => {
   dispatch({ type: SET_SOCKET_MESSAGE, payload: { message } });
 };
 
-export const saveMessage = (message, resetTimer) => async (dispatch) => {
+export const saveMessage = (message, type) => async (dispatch) => {
   dispatch({ type: SAVE_MESSAGE_REQUEST });
   try {
-    dispatch({ type: SAVE_MESSAGE, payload: { message } });
-    SocketService.client.emit(Events.singleRoomChat, message);
-    const {
-      data: {
-        data: { newMessage },
-      },
-    } = await apiClient.post(SAVE_MESSAGE_ROUTE, message);
+    if (type === MESSAGE_TYPE.TEXT || type === MESSAGE_TYPE.VIDEO_CALL) {
+      dispatch({ type: SAVE_MESSAGE, payload: { message } });
+      SocketService.client.emit(Events.singleRoomChat, message);
+      const {
+        data: {
+          data: { newMessage },
+        },
+      } = await apiClient.post(SAVE_MESSAGE_ROUTE, message);
+    } else if (type === MESSAGE_TYPE.IMAGE || type === MESSAGE_TYPE.FILE) {
+      const {
+        data: {
+          data: { newMessage },
+        },
+      } = await apiClient.post(SAVE_MESSAGE_ROUTE, message);
+      dispatch({ type: SAVE_MESSAGE, payload: { message: newMessage } });
+      SocketService.client.emit(Events.singleRoomChat, newMessage);
+    }
   } catch (error) {
     console.log(error);
     dispatch({ type: SAVE_MESSAGE_FAILURE, payload: { error } });

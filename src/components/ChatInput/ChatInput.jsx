@@ -1,11 +1,18 @@
 import { Box, Flex, Icon, IconButton, Input } from "@chakra-ui/react";
-import React from "react";
+import React, { useRef } from "react";
 import { BiX } from "react-icons/bi";
 import { BsImage } from "react-icons/bs";
 import { CgAttachment } from "react-icons/cg";
 import { IoMdSend } from "react-icons/io";
 
-const ChatInput = ({ message, onChat, sendMessage, onClickSend }) => {
+const ChatInput = ({
+  message,
+  onChat,
+  sendMessage,
+  onClickSend,
+  handleUploadImage,
+}) => {
+  const uploadImgRef = useRef();
   return (
     <Box width="100%">
       <Flex
@@ -17,7 +24,7 @@ const ChatInput = ({ message, onChat, sendMessage, onClickSend }) => {
         alignSelf="flex-end"
         borderWidth="2px"
         borderColor="gray.200"
-        zIndex="99"
+        //zIndex="99"
         alignItems="center"
         paddingRight="1%"
         paddingLeft="1%"
@@ -26,7 +33,20 @@ const ChatInput = ({ message, onChat, sendMessage, onClickSend }) => {
         <Flex width="100%" alignItems="center" flexWrap="wrap">
           <Flex mr={2}>
             <Flex alignItems="center">
+              <Input
+                accept="image/*"
+                multiple={false}
+                onChange={(e) => {
+                  handleUploadImage(e);
+                }}
+                ref={uploadImgRef}
+                style={{ display: "none" }}
+                type="file"
+              />
               <IconButton
+                onClick={() => {
+                  uploadImgRef.current.click();
+                }}
                 padding={2}
                 bgColor="gray.50"
                 icon={<Icon as={BsImage} color="teal.500" boxSize={6} />}

@@ -14,7 +14,7 @@ const ChatToBottomBtn = ({ onClick }) => {
       width="40px"
       height="40px"
       borderRadius="50%"
-      zIndex="999"
+      //zIndex="999"
       cursor="pointer"
       boxShadow="lg"
       onClick={onClick}

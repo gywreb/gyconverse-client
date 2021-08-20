@@ -1,4 +1,4 @@
-import { Flex, Spinner, useToast } from "@chakra-ui/react";
+import { chakra, Flex, Spinner, useToast } from "@chakra-ui/react";
 import React from "react";
 import { useRef } from "react";
 import { useState } from "react";
@@ -17,6 +17,15 @@ import {
   saveMessage,
   setSocketMessage,
 } from "src/store/chat/actions";
+import { fileUri } from "src/configs/apiClient";
+import ImageViewer from "react-simple-image-viewer";
+
+const Gallery = chakra(ImageViewer, {
+  baseStyle: {
+    position: "absolute",
+    zIndex: "99",
+  },
+});
 
 const Chat = () => {
   const {
@@ -25,6 +34,7 @@ const Chat = () => {
     loadingHistory,
     currentRoom,
     onlineFriends,
+    gallery,
   } = useSelector((state) => state.chat);
   const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -32,6 +42,8 @@ const Chat = () => {
   const location = useLocation();
   const history = useHistory();
   const toast = useToast();
+  const [isImgViewOpen, setIsImgViewOpen] = useState(false);
+  const [currentImgIndex, setCurrentImgIndex] = useState(0);
 
   const handleToBottom = () => {
     messageAnchor?.current?.scrollIntoView({ behavior: "smooth" });
@@ -92,11 +104,34 @@ const Chat = () => {
       sender: userInfo._id,
       content: message,
     };
-    dispatch(saveMessage(newMessage));
+    dispatch(saveMessage(newMessage, MESSAGE_TYPE.TEXT));
     setMessage("");
     setTimeout(() => {
       messageAnchor?.current?.scrollIntoView({ behavior: "smooth" });
     }, 100);
+  };
+
+  const handleUploadImage = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.readAsBinaryString(file);
+
+    // handle upload image
+    const newMessage = new FormData();
+    newMessage.append("type", MESSAGE_TYPE.IMAGE);
+    newMessage.append("room", currentRoom.singleRoom);
+    newMessage.append("sender", userInfo._id);
+    newMessage.append("content", file);
+
+    dispatch(saveMessage(newMessage, MESSAGE_TYPE.IMAGE));
+    setTimeout(() => {
+      messageAnchor?.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+
+    reader.onerror = () => {
+      console.log("error on load image");
+    };
   };
 
   const handleVideoCall = (currentRoom, isOnline, isInCalling, isInVidCall) => {
@@ -134,58 +169,90 @@ const Chat = () => {
     }
   };
 
+  const handleInteractMessage = (message, type) => {
+    switch (type) {
+      case MESSAGE_TYPE.IMAGE: {
+        let index = gallery.findIndex(
+          (img) => fileUri(message.content) === img
+        );
+        setCurrentImgIndex(index);
+        setIsImgViewOpen(true);
+      }
+    }
+  };
+
+  const closeImageViewer = () => {
+    setCurrentImgIndex(0);
+    setIsImgViewOpen(false);
+  };
+
   return (
-    <AppLayout>
-      <Flex
-        flexDirection="column"
-        position="relative"
-        width="100%"
-        alignItems="center"
-        height="100vh"
-        pb="70px"
-        pt="70px"
-        overflowX="hidden"
-      >
-        <ChatHeader
-          isOnline={onlineFriends.includes(currentRoom?._id)}
-          isInCalling={inCallingFriends.includes(currentRoom?._id)}
-          isInVidCall={inVidCallFriends.includes(currentRoom?._id)}
-          avatar={currentRoom?.avatar}
-          roomName={currentRoom?.username}
-          handleVideoCall={() =>
-            handleVideoCall(
-              currentRoom,
-              onlineFriends.includes(currentRoom?._id),
-              inCallingFriends.includes(currentRoom?._id),
-              inVidCallFriends.includes(currentRoom?._id)
-            )
-          }
+    <>
+      {isImgViewOpen && (
+        <Gallery
+          src={gallery}
+          currentIndex={currentImgIndex}
+          disableScroll={false}
+          onClose={closeImageViewer}
+          backgroundStyle={{
+            backgroundColor: "rgba(0,0,0,0.9)",
+          }}
         />
-        {loadingHistory ? (
-          <Flex
-            alignItems="center"
-            justifyContent="center"
-            width="100%"
-            height="100%"
-            bg="gray.200"
-          >
-            <Spinner color="teal.500" boxSize={32} thickness="6px" />
-          </Flex>
-        ) : (
-          <ChatBox
-            authUser={userInfo}
-            messageAnchor={messageAnchor}
-            handleToBottom={handleToBottom}
+      )}
+      <AppLayout>
+        <Flex
+          flexDirection="column"
+          position="relative"
+          width="100%"
+          alignItems="center"
+          height="100vh"
+          pb="70px"
+          pt="70px"
+          overflowX="hidden"
+        >
+          <ChatHeader
+            isOnline={onlineFriends.includes(currentRoom?._id)}
+            isInCalling={inCallingFriends.includes(currentRoom?._id)}
+            isInVidCall={inVidCallFriends.includes(currentRoom?._id)}
+            avatar={currentRoom?.avatar}
+            roomName={currentRoom?.username}
+            handleVideoCall={() =>
+              handleVideoCall(
+                currentRoom,
+                onlineFriends.includes(currentRoom?._id),
+                inCallingFriends.includes(currentRoom?._id),
+                inVidCallFriends.includes(currentRoom?._id)
+              )
+            }
           />
-        )}
-        <ChatInput
-          onChat={handleChat}
-          message={message}
-          sendMessage={handleSendMessage}
-          onClickSend={handleSendMessage}
-        />
-      </Flex>
-    </AppLayout>
+          {loadingHistory ? (
+            <Flex
+              alignItems="center"
+              justifyContent="center"
+              width="100%"
+              height="100%"
+              bg="gray.200"
+            >
+              <Spinner color="teal.500" boxSize={32} thickness="6px" />
+            </Flex>
+          ) : (
+            <ChatBox
+              authUser={userInfo}
+              messageAnchor={messageAnchor}
+              handleToBottom={handleToBottom}
+              handleInteractMessage={handleInteractMessage}
+            />
+          )}
+          <ChatInput
+            onChat={handleChat}
+            message={message}
+            sendMessage={handleSendMessage}
+            onClickSend={handleSendMessage}
+            handleUploadImage={handleUploadImage}
+          />
+        </Flex>
+      </AppLayout>
+    </>
   );
 };
 
