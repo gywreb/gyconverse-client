@@ -284,9 +284,6 @@ const VideoCall = () => {
   };
 
   const handleSwitchInputAudio = (deviceId) => {
-    SocketService.authVideoStream.getTracks().map((track) => {
-      track.stop();
-    });
     navigator.mediaDevices
       .getUserMedia({
         video: true,
@@ -305,7 +302,6 @@ const VideoCall = () => {
       })
       .then(handleGetDevices)
       .catch((err) => console.log(err));
-    console.log(SocketService.authVideoStream);
   };
 
   return (
