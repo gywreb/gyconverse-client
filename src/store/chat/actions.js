@@ -57,13 +57,13 @@ export const saveMessage =
     try {
       if (type === MESSAGE_TYPE.TEXT || type === MESSAGE_TYPE.VIDEO_CALL) {
         dispatch({ type: SAVE_MESSAGE, payload: { message } });
-        //SocketService.client.emit(Events.singleRoomChat, message);
+        SocketService.client.emit(Events.singleRoomChat, message);
         const {
           data: {
             data: { newMessage },
           },
         } = await apiClient.post(SAVE_MESSAGE_ROUTE, message);
-        SocketService.client.emit(Events.singleRoomChat, newMessage);
+        // SocketService.client.emit(Events.singleRoomChat, newMessage);
       } else if (type === MESSAGE_TYPE.IMAGE || type === MESSAGE_TYPE.FILE) {
         if (type === MESSAGE_TYPE.IMAGE) {
           dispatch({
