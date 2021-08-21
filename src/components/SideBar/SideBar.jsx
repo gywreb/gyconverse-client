@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { navItems } from "src/configs/navigation";
 import { ROUTE_KEY } from "src/configs/routes";
+import { Events, SocketService } from "src/services/SocketService";
 import { logout } from "src/store/auth/actions";
 import { setActiveNavigation } from "src/store/navigation/actions";
 import MotionDiv from "../MotionDiv/MotionDiv";
@@ -25,6 +26,13 @@ const SideBar = () => {
   const handleNavigation = (id, routeKey) => {
     dispatch(setActiveNavigation(id));
     if (id !== ROUTE_KEY.Logout) {
+      if (routeKey === ROUTE_KEY.Home) {
+        SocketService.client.off(Events.receiveFriendRequest);
+        SocketService.client.off(Events.alertAcceptFriendRequest);
+        history.replace({
+          pathname: routeKey,
+        });
+      }
       if (routeKey === ROUTE_KEY.Chat) {
         if (!userInfo?.friends.length) {
           toast({
@@ -35,8 +43,24 @@ const SideBar = () => {
             duration: 5000,
             isClosable: true,
           });
-        } else
-          history.replace({ pathname: routeKey, state: { isChatInit: true } });
+        } else {
+          let isNoSingleRoom = userInfo.friends.filter(
+            (friend) => friend.singleRoom !== null
+          );
+          if (!isNoSingleRoom.length) {
+            toast({
+              title: "Let's click that 'chat' button with someone first!",
+              position: "top",
+              status: "warning",
+              duration: 5000,
+              isClosable: true,
+            });
+          } else
+            history.replace({
+              pathname: routeKey,
+              state: { isChatInit: true },
+            });
+        }
       } else history.replace({ pathname: routeKey });
     } else if (id === ROUTE_KEY.Logout) {
       dispatch(logout(userInfo, history));

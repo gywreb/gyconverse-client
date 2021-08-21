@@ -45,6 +45,7 @@ export class SocketService {
   static userVideoStream = null;
   static authPeer = null;
   static userPeer = null;
+  static isInitFREvents = false;
 
   static clientInit() {
     SocketService.client = io(baseURL);
