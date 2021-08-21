@@ -1,4 +1,4 @@
-import { Avatar, Flex, Stack } from "@chakra-ui/react";
+import { Avatar, Flex, Stack, useToast } from "@chakra-ui/react";
 import React from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +16,7 @@ const SideBar = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
+  const toast = useToast();
 
   useEffect(() => {
     dispatch(setActiveNavigation(location.pathname));
@@ -24,9 +25,19 @@ const SideBar = () => {
   const handleNavigation = (id, routeKey) => {
     dispatch(setActiveNavigation(id));
     if (id !== ROUTE_KEY.Logout) {
-      if (routeKey === ROUTE_KEY.Chat)
-        history.replace({ pathname: routeKey, state: { isChatInit: true } });
-      else history.replace({ pathname: routeKey });
+      if (routeKey === ROUTE_KEY.Chat) {
+        if (!userInfo?.friends.length) {
+          toast({
+            title:
+              "You know you need friends to have FUN conversations right !?",
+            position: "top",
+            status: "warning",
+            duration: 5000,
+            isClosable: true,
+          });
+        } else
+          history.replace({ pathname: routeKey, state: { isChatInit: true } });
+      } else history.replace({ pathname: routeKey });
     } else if (id === ROUTE_KEY.Logout) {
       dispatch(logout(userInfo, history));
     }

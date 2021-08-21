@@ -40,7 +40,7 @@ const Conversation = () => {
   const toast = useToast();
 
   const handleGetRoomHistory = async (friend) => {
-    SocketService.leaveRoom();
+    //SocketService.leaveRoom();
     SocketService.client.emit(Events.joinRoom, friend.singleRoom);
     dispatch(loadRoomHistory(friend));
     history.replace(ROUTE_KEY.Chat);
@@ -125,9 +125,9 @@ const Conversation = () => {
               talked={friend.talked}
               singleRoom={friend.singleRoom}
               onClick={() => handleGetRoomHistory(friend)}
-              isOnline={onlineFriends.includes(friend._id)}
-              isInCalling={inCallingFriends.includes(friend._id)}
-              isInVidCall={inVidCallFriends.includes(friend._id)}
+              isOnline={onlineFriends?.includes(friend._id)}
+              isInCalling={inCallingFriends?.includes(friend._id)}
+              isInVidCall={inVidCallFriends?.includes(friend._id)}
               handleSendChatInvite={() => handleSendChatInvite(friend)}
               isChatting={
                 friend?.singleRoom === currentRoom?.singleRoom &&

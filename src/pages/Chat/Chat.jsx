@@ -60,15 +60,12 @@ const Chat = () => {
         sender: userInfo._id,
         content: location.state.content,
       };
-      setTimeout(
-        () => {
-          dispatch(saveMessage(newMessage, MESSAGE_TYPE.VIDEO_CALL));
-          setTimeout(() => {
-            messageAnchor?.current?.scrollIntoView({ behavior: "smooth" });
-          }, 100);
-        },
-        500
-      );
+      setTimeout(() => {
+        dispatch(saveMessage(newMessage, MESSAGE_TYPE.VIDEO_CALL));
+        setTimeout(() => {
+          messageAnchor?.current?.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      }, 500);
     }
   }, [location.state, loadingHistory]);
 
