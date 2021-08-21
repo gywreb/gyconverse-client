@@ -1,4 +1,4 @@
-import { chakra, Flex, Icon } from "@chakra-ui/react";
+import { chakra, Flex } from "@chakra-ui/react";
 import React from "react";
 
 const Video = chakra("video", {

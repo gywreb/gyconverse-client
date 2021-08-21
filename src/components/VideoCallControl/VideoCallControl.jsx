@@ -11,8 +11,7 @@ import {
   Select,
   Text,
 } from "@chakra-ui/react";
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React from "react";
 import { AiFillSound } from "react-icons/ai";
 import { FaMicrophone, FaMicrophoneSlash } from "react-icons/fa";
 import { ImPhoneHangUp } from "react-icons/im";

@@ -32,7 +32,7 @@ export const navItems = [
     routeKey: ROUTE_KEY.GroupChat,
   },
   {
-    id: ROUTE_KEY.Login,
+    id: ROUTE_KEY.Logout,
     iconBase: RiLogoutBoxLine,
     iconActive: RiLogoutBoxFill,
     routeKey: ROUTE_KEY.Login,

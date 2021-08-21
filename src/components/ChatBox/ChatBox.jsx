@@ -1,5 +1,5 @@
 import { useOverflowScrollPosition } from "@byteclaw/use-overflow-scroll-position";
-import { Box, chakra, Flex } from "@chakra-ui/react";
+import { chakra, Flex } from "@chakra-ui/react";
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -100,6 +100,7 @@ const ChatBox = ({
             currentRenderSender = message.sender;
             return authUser._id === message.sender ? (
               <RightMessage
+                key={index}
                 type={message.type}
                 content={message.content}
                 avatar={
@@ -112,6 +113,7 @@ const ChatBox = ({
               />
             ) : (
               <LeftMessage
+                key={index}
                 type={message.type}
                 content={message.content}
                 avatar={message.avatar}
@@ -124,6 +126,7 @@ const ChatBox = ({
             if (message.sender === currentRenderSender) {
               return authUser._id === message.sender ? (
                 <RightMessage
+                  key={index}
                   type={message.type}
                   content={message.content}
                   avatar={
@@ -137,6 +140,7 @@ const ChatBox = ({
                 />
               ) : (
                 <LeftMessage
+                  key={index}
                   type={message.type}
                   content={message.content}
                   avatar={message.avatar}
@@ -150,6 +154,7 @@ const ChatBox = ({
               currentRenderSender = message.sender;
               return authUser._id === message.sender ? (
                 <RightMessage
+                  key={index}
                   type={message.type}
                   content={message.content}
                   avatar={
@@ -162,6 +167,7 @@ const ChatBox = ({
                 />
               ) : (
                 <LeftMessage
+                  key={index}
                   type={message.type}
                   content={message.content}
                   avatar={message.avatar}

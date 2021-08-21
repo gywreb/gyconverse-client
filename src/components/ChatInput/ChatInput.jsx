@@ -1,6 +1,5 @@
 import { Box, Flex, Icon, IconButton, Input } from "@chakra-ui/react";
 import React, { useRef } from "react";
-import { BiX } from "react-icons/bi";
 import { BsImage } from "react-icons/bs";
 import { CgAttachment } from "react-icons/cg";
 import { IoMdSend } from "react-icons/io";
@@ -64,11 +63,11 @@ const ChatInput = ({
               bgColor="gray.200"
               variant="filled"
               placeholder="Type your thougnt here..."
-              isFullWidth
+              isFullWidth={true}
               value={message}
               onChange={(e) => onChat(e)}
               onKeyDown={(e) => (e.key === "Enter" ? sendMessage() : null)}
-              autocomplete="off"
+              autoComplete="off"
             />
           </Flex>
           <Flex ml={2}>

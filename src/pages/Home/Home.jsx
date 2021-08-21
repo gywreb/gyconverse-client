@@ -1,21 +1,9 @@
-import {
-  Box,
-  Flex,
-  Grid,
-  SimpleGrid,
-  Spinner,
-  Text,
-  useToast,
-  Wrap,
-} from "@chakra-ui/react";
+import { Flex, Spinner, Text, useToast, Wrap } from "@chakra-ui/react";
 import React, { useEffect } from "react";
-import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AppLayout from "src/components/AppLayout/AppLayout";
-import AppScrollBar from "src/components/AppScrollBar/AppScrollBar";
 import HomeHeader from "src/components/HomeHeader/HomeHeader";
 import PersonCard from "src/components/PersonCard/PersonCard";
-import { SocketService } from "src/services/SocketService";
 import { sendFriendRequest } from "src/store/auth/actions";
 import { getRandomPeople } from "src/store/user/actions";
 

@@ -1,25 +1,18 @@
-import {
-  Avatar,
-  Divider,
-  Flex,
-  Heading,
-  Icon,
-  IconButton,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Avatar, Flex, Stack } from "@chakra-ui/react";
 import React from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { navItems } from "src/configs/navigation";
 import { ROUTE_KEY } from "src/configs/routes";
+import { logout } from "src/store/auth/actions";
 import { setActiveNavigation } from "src/store/navigation/actions";
 import MotionDiv from "../MotionDiv/MotionDiv";
 import NavItem from "./NavItem/NavItem";
 
 const SideBar = () => {
   const { navigation, activeNav } = useSelector((state) => state.navigation);
+  const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
@@ -30,10 +23,12 @@ const SideBar = () => {
 
   const handleNavigation = (id, routeKey) => {
     dispatch(setActiveNavigation(id));
-    if (id !== "logout") {
+    if (id !== ROUTE_KEY.Logout) {
       if (routeKey === ROUTE_KEY.Chat)
         history.replace({ pathname: routeKey, state: { isChatInit: true } });
       else history.replace({ pathname: routeKey });
+    } else if (id === ROUTE_KEY.Logout) {
+      dispatch(logout(userInfo, history));
     }
   };
 

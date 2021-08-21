@@ -4,6 +4,7 @@ import {
   LOAD_ROOM_HISTORY,
   LOAD_ROOM_HISTORY_FAILURE,
   LOAD_ROOM_HISTORY_REQUEST,
+  SAVE_IMAGE_MESSAGE,
   SAVE_MESSAGE,
   SAVE_MESSAGE_FAILURE,
   SAVE_MESSAGE_REQUEST,
@@ -21,6 +22,7 @@ const initialState = {
   currentRoom: null,
   prevRoom: null,
   loadingHistory: false,
+  loadingSendMess: false,
   error: null,
   onlineFriends: [],
   inCallingFriends: [],
@@ -56,7 +58,7 @@ export default function chatReducer(state = initialState, action) {
       };
     }
     case SAVE_MESSAGE_REQUEST: {
-      return { ...state };
+      return { ...state, loadingSendMess: true };
     }
     case SAVE_MESSAGE: {
       const { type, content } = action.payload.message;
@@ -64,12 +66,26 @@ export default function chatReducer(state = initialState, action) {
         type === MESSAGE_TYPE.IMAGE
           ? [...state.gallery, fileUri(content)]
           : [...state.gallery];
+      let newMessageList =
+        type === MESSAGE_TYPE.IMAGE
+          ? state.messages.filter(
+              (message) => message.type !== MESSAGE_TYPE.IS_UPLOAD_IMAGE
+            )
+          : [...state.messages];
       return {
         ...state,
         error: null,
-        messages: [...state.messages, action.payload.message],
+        messages: [...newMessageList, action.payload.message],
         gallery: newGallery,
+        loadingSendMess: false,
       };
+    }
+    case SAVE_IMAGE_MESSAGE: {
+      const { message, base64Data } = action.payload;
+      const isUploadMessage = { ...message };
+      isUploadMessage.content = base64Data;
+      isUploadMessage.type = MESSAGE_TYPE.IS_UPLOAD_IMAGE;
+      return { ...state, messages: [...state.messages, isUploadMessage] };
     }
     case SAVE_MESSAGE_FAILURE: {
       return { ...state, error: action.payload.error };

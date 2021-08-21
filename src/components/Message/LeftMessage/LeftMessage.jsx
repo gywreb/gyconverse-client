@@ -1,11 +1,10 @@
 import {
   AspectRatio,
   Avatar,
-  chakra,
   Flex,
   Icon,
   Image,
-  Spinner,
+  Progress,
   Text,
 } from "@chakra-ui/react";
 import React from "react";
@@ -32,7 +31,7 @@ const LeftMessage = ({
               objectFit="cover"
               borderRadius="8px"
               fallback={
-                <Spinner color="teal.500" boxSize={12} thickness="6px" />
+                <Progress colorScheme="whiteAlpha" size="xs" isIndeterminate />
               }
               fallbackSrc={PlaceholderImg}
             />
@@ -102,7 +101,11 @@ const LeftMessage = ({
           cursor={type !== MESSAGE_TYPE.TEXT ? "pointer" : null}
           onClick={handleInteractMessage}
           maxWidth="90%"
-          p={type === MESSAGE_TYPE.IMAGE ? 0 : 4}
+          p={
+            type === MESSAGE_TYPE.TEXT || type === MESSAGE_TYPE.VIDEO_CALL
+              ? 4
+              : 0
+          }
           borderRadius="8px"
           bgColor="gray.50"
           boxShadow="lg"

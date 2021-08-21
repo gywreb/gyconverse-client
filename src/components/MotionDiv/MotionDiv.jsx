@@ -1,7 +1,6 @@
 import { chakra } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import PropTypes from "prop-types";
-import { BoxProps } from "@chakra-ui/react";
 
 const MotionBox = chakra(motion.div);
 

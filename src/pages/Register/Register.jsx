@@ -5,6 +5,7 @@ import {
   FormControl,
   FormErrorMessage,
   Icon,
+  Image,
   Input,
   InputGroup,
   InputLeftElement,
@@ -23,6 +24,7 @@ import { Link, useHistory } from "react-router-dom";
 import omit from "lodash/omit";
 import { useDispatch, useSelector } from "react-redux";
 import { register as registerApi } from "../../store/auth/actions";
+import Logo from "../../assets/images/gc-login-logo.png";
 
 const Register = () => {
   const {
@@ -222,29 +224,34 @@ const Register = () => {
         </MotionDiv>
       </Flex>
       <MotionDiv motion="slideLeftIn" w="50%">
-        <Flex
-          h="100%"
-          flexDirection="column"
-          alignItems="flex-start"
-          justify="center"
-        >
-          <Text
-            bgGradient="linear(to-r, cyan.600, teal.900)"
-            bgClip="text"
-            fontSize="8xl"
-            fontWeight="extrabold"
-          >
-            GyConverse
-          </Text>
-          <Text
-            mt={-2}
-            mb={4}
-            bgGradient="linear(to-r, cyan.600, teal.900)"
-            bgClip="text"
-            fontSize="3xl"
-          >
-            Fun conversation begin.
-          </Text>
+        <Flex flexDirection="column" h="100%" alignItems="flex-start">
+          <Flex h="100%" alignItems="center">
+            <Image src={Logo} maxWidth="200px" />
+            <Flex
+              flexDirection="column"
+              alignItems="flex-start"
+              justify="center"
+            >
+              <Text
+                bgGradient="linear(to-r, cyan.600, teal.900)"
+                bgClip="text"
+                fontSize="7xl"
+                fontWeight="extrabold"
+              >
+                GyConverse
+              </Text>
+              <Text
+                mt={-2}
+                mb={4}
+                ml={1}
+                bgGradient="linear(to-r, cyan.600, teal.900)"
+                bgClip="text"
+                fontSize="3xl"
+              >
+                Fun conversation begin.
+              </Text>
+            </Flex>
+          </Flex>
         </Flex>
       </MotionDiv>
     </Flex>

@@ -18,7 +18,7 @@ const App = () => {
         SocketService.disconnect();
       }
     };
-  }, [SocketService]);
+  }, []);
 
   return (
     <ChakraProvider theme={theme}>

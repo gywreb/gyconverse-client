@@ -34,6 +34,7 @@ export const Events = {
   cancelCallReceive: "cancelCallReceive",
   getInCallingUsers: "getInCallingUsers",
   getInVidCallUsers: "getInVidCallUsers",
+  logout: "logout",
 };
 
 export class SocketService {

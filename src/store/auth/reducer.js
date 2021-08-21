@@ -7,6 +7,7 @@ import {
   LOGIN_FAILURE,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
+  LOGOUT,
   REGISTER_FAILURE,
   REGISTER_REQUEST,
   REGISTER_SUCCESS,
@@ -174,6 +175,10 @@ export default function authReducer(state = initialState, action) {
         userInfo: updatedUserInfo,
         invitingId: null,
       };
+    }
+
+    case LOGOUT: {
+      return { ...initialState };
     }
 
     default: {
