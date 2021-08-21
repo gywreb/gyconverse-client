@@ -297,6 +297,8 @@ export const logout = (userInfo, history) => (dispatch) => {
   delete apiClient.defaults.headers.common["Authorization"];
   localStorage.removeItem("jwt");
   SocketService.client.emit(Events.logout, userInfo);
+  SocketService.client.off(Events.receiveFriendRequest);
+  SocketService.client.off(Events.alertAcceptFriendRequest);
   dispatch({ type: LOGOUT });
   history.push(ROUTE_KEY.Login);
 };
