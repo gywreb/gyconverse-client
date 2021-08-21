@@ -95,7 +95,7 @@ const ChatBox = ({
         }}
       >
         <MessageTop ref={topMessage} />
-        {messages?.slice(0, 25).map((message, index) => {
+        {messages?.map((message, index) => {
           if (index === 0) {
             currentRenderSender = message.sender;
             return authUser._id === message.sender ? (
