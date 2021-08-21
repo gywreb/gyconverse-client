@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Box,
   Button,
   Flex,
@@ -20,15 +19,10 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { useEffect } from "react";
-import {
-  BsFillInfoCircleFill,
-  BsFillPeopleFill,
-  BsSearch,
-} from "react-icons/bs";
+import { BsFillPeopleFill, BsSearch } from "react-icons/bs";
 import { ImDrawer2 } from "react-icons/im";
-import { IoMdNotifications, IoMdVideocam } from "react-icons/io";
+import { IoMdNotifications } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
-import { appColor } from "src/configs/styles";
 import { Events, SocketService } from "src/services/SocketService";
 import {
   acceptFriendRequest,
@@ -36,7 +30,6 @@ import {
   updateFriendRequests,
 } from "src/store/auth/actions";
 import { updatePeopleList } from "src/store/user/actions";
-import AppScrollBar from "../AppScrollBar/AppScrollBar";
 import FriendRequestItem from "../FriendRequestItem/FriendRequestItem";
 
 const HomeHeader = () => {

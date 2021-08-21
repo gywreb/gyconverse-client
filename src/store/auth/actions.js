@@ -22,6 +22,7 @@ export const ACCEPT_FRIEND_REQUEST_LOADING =
 export const UPDATE_FRIEND_LIST = "@AUTH/UPDATE_FRIEND_LIST";
 export const SEND_CHAT_INVITE = "@AUTH/SEND_CHAT_INVITE";
 export const SEND_CHAT_INVITE_LOADING = "@AUTH/SEND_CHAT_INVITE_LOADING";
+export const LOGOUT = "@AUTH/LOGOUT";
 
 const REGISTER_ROUTE = "/auth/register";
 const LOGIN_ROUTE = "/auth/login";
@@ -186,6 +187,7 @@ export const getCurrent = (history, toast) => async (dispatch) => {
       type: GET_CURRENT_AUTH_FAILURE,
       payload: { error: error?.response?.data || "error" },
     });
+    history.push(ROUTE_KEY.Login);
   }
 };
 
@@ -290,3 +292,11 @@ export const register =
       });
     }
   };
+
+export const logout = (userInfo, history) => (dispatch) => {
+  delete apiClient.defaults.headers.common["Authorization"];
+  localStorage.removeItem("jwt");
+  SocketService.client.emit(Events.logout, userInfo);
+  dispatch({ type: LOGOUT });
+  history.push(ROUTE_KEY.Login);
+};

@@ -1,7 +1,18 @@
-import { Avatar, Box, Flex, Icon, Text } from "@chakra-ui/react";
+import {
+  AspectRatio,
+  Avatar,
+  Flex,
+  Icon,
+  Image,
+  Progress,
+  Text,
+} from "@chakra-ui/react";
 import React from "react";
 import { IoMdCall } from "react-icons/io";
+import { useSelector } from "react-redux";
+import { fileUri } from "src/configs/apiClient";
 import { MESSAGE_TYPE } from "src/configs/constants";
+import PlaceholderImg from "../../../assets/images/placeholder.jpg";
 
 const RightMessage = ({
   content,
@@ -10,8 +21,64 @@ const RightMessage = ({
   type,
   handleInteractMessage,
 }) => {
+  const { loadingSendMess } = useSelector((state) => state.chat);
+
   const renderMessage = (type) => {
     switch (type) {
+      case MESSAGE_TYPE.IS_UPLOAD_IMAGE: {
+        return (
+          <Flex
+            width="300px"
+            position="relative"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <AspectRatio width="100%" ratio={4 / 3}>
+              <Image
+                src={content}
+                width="100%"
+                objectFit="cover"
+                borderRadius="8px"
+                fallback={
+                  <Progress
+                    colorScheme="whiteAlpha"
+                    size="xs"
+                    isIndeterminate
+                  />
+                }
+                fallbackSrc={PlaceholderImg}
+                opacity={0.5}
+                bgColor="white"
+              />
+            </AspectRatio>
+            <Progress
+              position="absolute"
+              width="100%"
+              height="100%"
+              opacity={0.5}
+              colorScheme="teal"
+              size="xs"
+              isIndeterminate
+            />
+          </Flex>
+        );
+      }
+      case MESSAGE_TYPE.IMAGE: {
+        return (
+          <AspectRatio width="300px" ratio={4 / 3}>
+            <Image
+              src={fileUri(content)}
+              width="100%"
+              objectFit="cover"
+              borderRadius="8px"
+              fallback={
+                <Progress colorScheme="whiteAlpha" size="xs" isIndeterminate />
+              }
+              fallbackSrc={PlaceholderImg}
+            />
+          </AspectRatio>
+        );
+      }
       case MESSAGE_TYPE.VIDEO_CALL: {
         return (
           <>
@@ -67,9 +134,17 @@ const RightMessage = ({
       >
         <Flex
           maxWidth="90%"
-          p={4}
+          p={
+            type === MESSAGE_TYPE.TEXT || type === MESSAGE_TYPE.VIDEO_CALL
+              ? 4
+              : 0
+          }
           borderRadius="8px"
-          bgColor="teal.500"
+          bgColor={
+            type === MESSAGE_TYPE.TEXT || type === MESSAGE_TYPE.VIDEO_CALL
+              ? "teal.500"
+              : "white"
+          }
           boxShadow="lg"
           cursor={type !== MESSAGE_TYPE.TEXT ? "pointer" : null}
           onClick={handleInteractMessage}

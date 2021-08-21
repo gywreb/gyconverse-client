@@ -1,7 +1,17 @@
-import { Avatar, Box, Flex, Icon, Text } from "@chakra-ui/react";
+import {
+  AspectRatio,
+  Avatar,
+  Flex,
+  Icon,
+  Image,
+  Progress,
+  Text,
+} from "@chakra-ui/react";
 import React from "react";
 import { IoMdCall } from "react-icons/io";
+import { fileUri } from "src/configs/apiClient";
 import { MESSAGE_TYPE } from "src/configs/constants";
+import PlaceholderImg from "../../../assets/images/placeholder.jpg";
 
 const LeftMessage = ({
   content,
@@ -12,6 +22,22 @@ const LeftMessage = ({
 }) => {
   const renderMessage = (type) => {
     switch (type) {
+      case MESSAGE_TYPE.IMAGE: {
+        return (
+          <AspectRatio width="300px" ratio={4 / 3}>
+            <Image
+              src={fileUri(content)}
+              width="100%"
+              objectFit="cover"
+              borderRadius="8px"
+              fallback={
+                <Progress colorScheme="whiteAlpha" size="xs" isIndeterminate />
+              }
+              fallbackSrc={PlaceholderImg}
+            />
+          </AspectRatio>
+        );
+      }
       case MESSAGE_TYPE.VIDEO_CALL: {
         return (
           <>
@@ -75,7 +101,11 @@ const LeftMessage = ({
           cursor={type !== MESSAGE_TYPE.TEXT ? "pointer" : null}
           onClick={handleInteractMessage}
           maxWidth="90%"
-          p={4}
+          p={
+            type === MESSAGE_TYPE.TEXT || type === MESSAGE_TYPE.VIDEO_CALL
+              ? 4
+              : 0
+          }
           borderRadius="8px"
           bgColor="gray.50"
           boxShadow="lg"

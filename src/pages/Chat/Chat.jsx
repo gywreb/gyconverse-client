@@ -1,4 +1,4 @@
-import { Flex, Spinner, useToast } from "@chakra-ui/react";
+import { chakra, Flex, Spinner, useToast } from "@chakra-ui/react";
 import React from "react";
 import { useRef } from "react";
 import { useState } from "react";
@@ -9,7 +9,7 @@ import AppLayout from "src/components/AppLayout/AppLayout";
 import ChatBox from "src/components/ChatBox/ChatBox";
 import ChatHeader from "src/components/ChatHeader/ChatHeader";
 import ChatInput from "src/components/ChatInput/ChatInput";
-import { MESSAGE_TYPE } from "src/configs/constants";
+import { FILE_LIMIT_SIZE, MESSAGE_TYPE } from "src/configs/constants";
 import { ROUTE_KEY } from "src/configs/routes";
 import { Events, SocketService } from "src/services/SocketService";
 import {
@@ -17,14 +17,25 @@ import {
   saveMessage,
   setSocketMessage,
 } from "src/store/chat/actions";
+import { fileUri } from "src/configs/apiClient";
+import ImageViewer from "react-simple-image-viewer";
+
+const Gallery = chakra(ImageViewer, {
+  baseStyle: {
+    position: "absolute",
+    zIndex: "99",
+  },
+});
 
 const Chat = () => {
   const {
     inCallingFriends,
     inVidCallFriends,
     loadingHistory,
+    loadingSendMess,
     currentRoom,
     onlineFriends,
+    gallery,
   } = useSelector((state) => state.chat);
   const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -32,6 +43,8 @@ const Chat = () => {
   const location = useLocation();
   const history = useHistory();
   const toast = useToast();
+  const [isImgViewOpen, setIsImgViewOpen] = useState(false);
+  const [currentImgIndex, setCurrentImgIndex] = useState(0);
 
   const handleToBottom = () => {
     messageAnchor?.current?.scrollIntoView({ behavior: "smooth" });
@@ -39,6 +52,7 @@ const Chat = () => {
 
   useEffect(() => {
     if (location.state?.sendCallFinishMess) {
+      if (loadingHistory) return;
       location.state.sendCallFinishMess = false;
       const newMessage = {
         type: MESSAGE_TYPE.VIDEO_CALL,
@@ -48,7 +62,7 @@ const Chat = () => {
       };
       setTimeout(
         () => {
-          dispatch(saveMessage(newMessage));
+          dispatch(saveMessage(newMessage, MESSAGE_TYPE.VIDEO_CALL));
           setTimeout(() => {
             messageAnchor?.current?.scrollIntoView({ behavior: "smooth" });
           }, 100);
@@ -56,11 +70,10 @@ const Chat = () => {
         process.env.NODE_ENV === "development" ? 500 : 2500
       );
     }
-  }, [location.state]);
+  }, [location.state, loadingHistory]);
 
   useEffect(() => {
     if (location?.state?.isChatInit) {
-      console.log(userInfo._id);
       let firstFriend = userInfo.friends[0];
       if (firstFriend.singleRoom) dispatch(loadRoomHistory(firstFriend));
       SocketService.client.emit(Events.joinRoom, firstFriend.singleRoom);
@@ -92,11 +105,58 @@ const Chat = () => {
       sender: userInfo._id,
       content: message,
     };
-    dispatch(saveMessage(newMessage));
+    dispatch(saveMessage(newMessage, MESSAGE_TYPE.TEXT));
     setMessage("");
     setTimeout(() => {
       messageAnchor?.current?.scrollIntoView({ behavior: "smooth" });
     }, 100);
+  };
+
+  const getBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  const handleUploadImage = async (e) => {
+    const file = e.target.files[0];
+
+    if (!file) return;
+    if (file.size > FILE_LIMIT_SIZE) {
+      toast({
+        title: `${file.name} is ${
+          file.size / Math.pow(2, 20)
+        }, larger than the max file size allowed is 5MB`,
+        position: "top",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+    const reader = new FileReader();
+    reader.readAsBinaryString(file);
+    reader.onerror = () => {
+      console.log("error on load image");
+    };
+
+    const base64Data = await getBase64(file);
+
+    // handle upload image
+    const newMessage = new FormData();
+    newMessage.append("type", MESSAGE_TYPE.IMAGE);
+    newMessage.append("room", currentRoom.singleRoom);
+    newMessage.append("sender", userInfo._id);
+    newMessage.append("content", file);
+
+    dispatch(
+      saveMessage(newMessage, MESSAGE_TYPE.IMAGE, base64Data, messageAnchor)
+    );
+    setTimeout(() => {
+      messageAnchor?.current?.scrollIntoView({ behavior: "smooth" });
+    }, 400);
   };
 
   const handleVideoCall = (currentRoom, isOnline, isInCalling, isInVidCall) => {
@@ -106,7 +166,7 @@ const Chat = () => {
           title: `${currentRoom.username} is offline at the moment, try calling ${currentRoom.username} again later!`,
           position: "top",
           status: "warning",
-          duration: 20000,
+          duration: 3000,
           isClosable: true,
         });
       } else if (isInVidCall) {
@@ -114,7 +174,7 @@ const Chat = () => {
           title: `${currentRoom.username} is in video call with someone, try calling ${currentRoom.username} again later!`,
           position: "top",
           status: "error",
-          duration: 20000,
+          duration: 3000,
           isClosable: true,
         });
       } else if (isInCalling) {
@@ -122,7 +182,7 @@ const Chat = () => {
           title: `${currentRoom.username} is calling someone, try calling ${currentRoom.username} again later!`,
           position: "top",
           status: "warning",
-          duration: 20000,
+          duration: 3000,
           isClosable: true,
         });
       } else {
@@ -134,58 +194,94 @@ const Chat = () => {
     }
   };
 
+  const handleInteractMessage = (message, type) => {
+    switch (type) {
+      case MESSAGE_TYPE.IMAGE: {
+        let index = gallery.findIndex(
+          (img) => fileUri(message.content) === img
+        );
+        setCurrentImgIndex(index);
+        setIsImgViewOpen(true);
+      }
+    }
+  };
+
+  const closeImageViewer = () => {
+    setCurrentImgIndex(0);
+    setIsImgViewOpen(false);
+  };
+
   return (
-    <AppLayout>
-      <Flex
-        flexDirection="column"
-        position="relative"
-        width="100%"
-        alignItems="center"
-        height="100vh"
-        pb="70px"
-        pt="70px"
-        overflowX="hidden"
-      >
-        <ChatHeader
-          isOnline={onlineFriends.includes(currentRoom?._id)}
-          isInCalling={inCallingFriends.includes(currentRoom?._id)}
-          isInVidCall={inVidCallFriends.includes(currentRoom?._id)}
-          avatar={currentRoom?.avatar}
-          roomName={currentRoom?.username}
-          handleVideoCall={() =>
-            handleVideoCall(
-              currentRoom,
-              onlineFriends.includes(currentRoom?._id),
-              inCallingFriends.includes(currentRoom?._id),
-              inVidCallFriends.includes(currentRoom?._id)
-            )
-          }
+    <>
+      {isImgViewOpen && (
+        <Gallery
+          src={gallery}
+          currentIndex={currentImgIndex}
+          disableScroll={false}
+          onClose={closeImageViewer}
+          backgroundStyle={{
+            backgroundColor: "rgba(0,0,0,0.9)",
+          }}
         />
-        {loadingHistory ? (
-          <Flex
-            alignItems="center"
-            justifyContent="center"
-            width="100%"
-            height="100%"
-            bg="gray.200"
-          >
-            <Spinner color="teal.500" boxSize={32} thickness="6px" />
-          </Flex>
-        ) : (
-          <ChatBox
-            authUser={userInfo}
-            messageAnchor={messageAnchor}
-            handleToBottom={handleToBottom}
+      )}
+      <AppLayout>
+        <Flex
+          flexDirection="column"
+          position="relative"
+          width="100%"
+          alignItems="center"
+          height="100vh"
+          pb="70px"
+          pt="70px"
+          overflowX="hidden"
+        >
+          <ChatHeader
+            isOnline={onlineFriends.includes(currentRoom?._id)}
+            isInCalling={inCallingFriends.includes(currentRoom?._id)}
+            isInVidCall={inVidCallFriends.includes(currentRoom?._id)}
+            avatar={currentRoom?.avatar}
+            roomName={currentRoom?.username}
+            handleVideoCall={() =>
+              handleVideoCall(
+                currentRoom,
+                onlineFriends.includes(currentRoom?._id),
+                inCallingFriends.includes(currentRoom?._id),
+                inVidCallFriends.includes(currentRoom?._id)
+              )
+            }
           />
-        )}
-        <ChatInput
-          onChat={handleChat}
-          message={message}
-          sendMessage={handleSendMessage}
-          onClickSend={handleSendMessage}
-        />
-      </Flex>
-    </AppLayout>
+          {loadingHistory ? (
+            <Flex
+              alignItems="center"
+              justifyContent="center"
+              width="100%"
+              height="100%"
+              bg="gray.200"
+            >
+              <Spinner color="teal.500" boxSize={32} thickness="6px" />
+            </Flex>
+          ) : (
+            <ChatBox
+              authUser={userInfo}
+              messageAnchor={messageAnchor}
+              handleToBottom={handleToBottom}
+              handleInteractMessage={
+                loadingSendMess ? () => {} : handleInteractMessage
+              }
+            />
+          )}
+          <ChatInput
+            onChat={handleChat}
+            message={message}
+            sendMessage={loadingHistory ? () => {} : handleSendMessage}
+            onClickSend={loadingHistory ? () => {} : handleSendMessage}
+            handleUploadImage={
+              loadingHistory || loadingSendMess ? () => {} : handleUploadImage
+            }
+          />
+        </Flex>
+      </AppLayout>
+    </>
   );
 };
 

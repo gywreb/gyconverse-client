@@ -1,14 +1,11 @@
 import {
   Box,
   Button,
-  Divider,
   Flex,
   Icon,
   Input,
   InputGroup,
-  InputRightAddon,
   InputRightElement,
-  Stack,
   useToast,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
@@ -44,8 +41,8 @@ const Conversation = () => {
 
   const handleGetRoomHistory = async (friend) => {
     SocketService.leaveRoom();
-    dispatch(loadRoomHistory(friend));
     SocketService.client.emit(Events.joinRoom, friend.singleRoom);
+    dispatch(loadRoomHistory(friend));
     history.replace(ROUTE_KEY.Chat);
   };
 
@@ -67,6 +64,14 @@ const Conversation = () => {
     SocketService.client.on(Events.getInVidCallUsers, (inVidCallUsers) => {
       dispatch(setInVidCallFriends(inVidCallUsers));
     });
+
+    return () => {
+      SocketService.client.off(Events.receiveChatInvite);
+      SocketService.client.off(Events.getOnlineUsers);
+      SocketService.client.off(Events.singleRoomsInfo);
+      SocketService.client.off(Events.getInCallingUsers);
+      SocketService.client.off(Events.getInVidCallUsers);
+    };
   }, []);
 
   const handleSendChatInvite = (friend) => {

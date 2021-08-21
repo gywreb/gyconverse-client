@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Flex, IconButton, Text } from "@chakra-ui/react";
+import { Avatar, Box, Button, Flex, Text } from "@chakra-ui/react";
 import React from "react";
 import { RiChatSmile3Fill } from "react-icons/ri";
 import { appColor } from "src/configs/styles";

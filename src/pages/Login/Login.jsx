@@ -1,11 +1,11 @@
 import {
   Box,
   Button,
-  chakra,
   Flex,
   FormControl,
   FormErrorMessage,
   Icon,
+  Image,
   Input,
   InputGroup,
   InputLeftElement,
@@ -19,13 +19,13 @@ import { useForm } from "react-hook-form";
 import { MdEmail, MdLock } from "react-icons/md";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/all";
 import { ROUTE_KEY } from "../../configs/routes";
-import { motion } from "framer-motion";
 import MotionDiv from "../../components/MotionDiv/MotionDiv";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import QueryString from "query-string";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "src/store/auth/actions";
+import Logo from "../../assets/images/gc-login-logo.png";
 
 const Login = () => {
   const {
@@ -63,29 +63,34 @@ const Login = () => {
   return (
     <Flex height="100vh" wrap="wrap" alignItems="center" bg="gray.50">
       <MotionDiv motion="slideLeftIn" w="50%">
-        <Flex
-          h="100%"
-          flexDirection="column"
-          alignItems="flex-end"
-          justify="center"
-        >
-          <Text
-            bgGradient="linear(to-r, cyan.600, teal.900)"
-            bgClip="text"
-            fontSize="8xl"
-            fontWeight="extrabold"
-          >
-            GyConverse
-          </Text>
-          <Text
-            mt={-2}
-            mb={4}
-            bgGradient="linear(to-r, cyan.600, teal.900)"
-            bgClip="text"
-            fontSize="3xl"
-          >
-            Fun conversation begin.
-          </Text>
+        <Flex flexDirection="column" h="100%" alignItems="flex-end">
+          <Flex h="100%" alignItems="center">
+            <Image src={Logo} maxWidth="200px" />
+            <Flex
+              flexDirection="column"
+              alignItems="flex-start"
+              justify="center"
+            >
+              <Text
+                bgGradient="linear(to-r, cyan.600, teal.900)"
+                bgClip="text"
+                fontSize="7xl"
+                fontWeight="extrabold"
+              >
+                GyConverse
+              </Text>
+              <Text
+                mt={-2}
+                mb={4}
+                ml={1}
+                bgGradient="linear(to-r, cyan.600, teal.900)"
+                bgClip="text"
+                fontSize="3xl"
+              >
+                Fun conversation begin.
+              </Text>
+            </Flex>
+          </Flex>
         </Flex>
       </MotionDiv>
       <Flex w="50%" wrap="wrap" alignItems="center" justify="center" pl={4}>

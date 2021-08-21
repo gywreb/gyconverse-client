@@ -2,7 +2,7 @@ import { useToast } from "@chakra-ui/react";
 import React from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Redirect, Route, Switch, useHistory } from "react-router-dom";
+import { Redirect, Route, useHistory } from "react-router-dom";
 import { ROUTE_KEY } from "src/configs/routes";
 import Chat from "src/pages/Chat/Chat";
 import GroupChat from "src/pages/GroupChat/GroupChat";
