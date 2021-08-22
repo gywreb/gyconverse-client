@@ -103,10 +103,7 @@ const ChatBox = ({
                 key={index}
                 type={message.type}
                 content={message.content}
-                avatar={
-                  message.avatar ||
-                  "https://avatars.githubusercontent.com/gywreb"
-                }
+                avatar={authUser.avatar || ""}
                 handleInteractMessage={() =>
                   handleInteractMessage(message, message.type)
                 }
@@ -129,10 +126,7 @@ const ChatBox = ({
                   key={index}
                   type={message.type}
                   content={message.content}
-                  avatar={
-                    message.avatar ||
-                    "https://avatars.githubusercontent.com/gywreb"
-                  }
+                  avatar={authUser.avatar || ""}
                   isContinuous
                   handleInteractMessage={() =>
                     handleInteractMessage(message, message.type)
@@ -157,10 +151,7 @@ const ChatBox = ({
                   key={index}
                   type={message.type}
                   content={message.content}
-                  avatar={
-                    message.avatar ||
-                    "https://avatars.githubusercontent.com/gywreb"
-                  }
+                  avatar={authUser.avatar || ""}
                   handleInteractMessage={() =>
                     handleInteractMessage(message, message.type)
                   }

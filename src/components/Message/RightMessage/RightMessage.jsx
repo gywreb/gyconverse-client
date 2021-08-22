@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import { fileUri } from "src/configs/apiClient";
 import { MESSAGE_TYPE } from "src/configs/constants";
 import PlaceholderImg from "../../../assets/images/placeholder.jpg";
+import GCIcon from "../../../assets/images/gc-icon-smooth.png";
 
 const RightMessage = ({
   content,
@@ -155,9 +156,9 @@ const RightMessage = ({
           <Avatar
             alignSelf="flex-end"
             size="md"
-            src={avatar ? avatar : ""}
+            src={avatar ? fileUri(avatar) : GCIcon}
             padding="2px"
-            bgColor="white"
+            bgColor={avatar ? "white" : "teal"}
             boxShadow="lg"
             opacity={isContinuous ? 0 : 1}
           />

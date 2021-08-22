@@ -24,6 +24,7 @@ import {
   setInCallingFriends,
   setInVidCallFriends,
   setOnlineFriends,
+  setSingleRooms,
 } from "src/store/chat/actions";
 import AppScrollBar from "../AppScrollBar/AppScrollBar";
 import MotionDiv from "../MotionDiv/MotionDiv";
@@ -31,9 +32,13 @@ import ConversationItem from "./ConversationItem/ConversationItem";
 
 const Conversation = () => {
   const { userInfo } = useSelector((state) => state.auth);
-  const { onlineFriends, currentRoom, inCallingFriends, inVidCallFriends } =
-    useSelector((state) => state.chat);
-  const [singleRooms, setSingleRooms] = useState([]);
+  const {
+    onlineFriends,
+    currentRoom,
+    inCallingFriends,
+    inVidCallFriends,
+    singleRooms,
+  } = useSelector((state) => state.chat);
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
@@ -54,7 +59,7 @@ const Conversation = () => {
       dispatch(setOnlineFriends(onlineUsers));
     });
     SocketService.client.on(Events.singleRoomsInfo, (singleRooms) => {
-      setSingleRooms(singleRooms);
+      dispatch(setSingleRooms(singleRooms));
     });
 
     // vid call status
@@ -120,6 +125,11 @@ const Conversation = () => {
                 (singleRooms.length ? singleRooms : userInfo.rooms).find(
                   (room) => room._id === friend.singleRoom
                 )?.lastMessage
+              }
+              unchecked={
+                singleRooms.length &&
+                singleRooms.find((room) => room._id === friend.singleRoom)
+                  ?.unchecked
               }
               avatar={friend.avatar}
               talked={friend.talked}
