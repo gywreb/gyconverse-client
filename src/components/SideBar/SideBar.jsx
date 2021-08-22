@@ -1,4 +1,4 @@
-import { Avatar, Flex, Stack, useToast } from "@chakra-ui/react";
+import { Avatar, Flex, Stack, useDisclosure, useToast } from "@chakra-ui/react";
 import React from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,6 +10,9 @@ import { logout } from "src/store/auth/actions";
 import { setActiveNavigation } from "src/store/navigation/actions";
 import MotionDiv from "../MotionDiv/MotionDiv";
 import NavItem from "./NavItem/NavItem";
+import GCIcon from "../../assets/images/gc-icon-smooth.png";
+import EditableProfile from "../EditableProfile/EditableProfile";
+import { fileUri } from "src/configs/apiClient";
 
 const SideBar = () => {
   const { navigation, activeNav } = useSelector((state) => state.navigation);
@@ -18,6 +21,7 @@ const SideBar = () => {
   const history = useHistory();
   const location = useLocation();
   const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     dispatch(setActiveNavigation(location.pathname));
@@ -81,8 +85,15 @@ const SideBar = () => {
       <Flex p="5%" flexDir="column" w="100%" alignItems="center" mb={4}>
         <Flex mt={4} alignItems="center">
           <Avatar
+            cursor="pointer"
             size="md"
-            src="https://avatars.githubusercontent.com/gywreb"
+            src={userInfo?.avatar ? fileUri(userInfo.avatar) : GCIcon}
+            bgColor={userInfo?.avatar ? "white" : "teal"}
+            boxShadow="lg"
+            padding="2px"
+            onClick={() => {
+              onOpen();
+            }}
           />
         </Flex>
       </Flex>
@@ -102,6 +113,7 @@ const SideBar = () => {
           />
         ))}
       </Stack>
+      <EditableProfile userInfo={userInfo} isOpen={isOpen} onClose={onClose} />
     </MotionDiv>
   );
 };

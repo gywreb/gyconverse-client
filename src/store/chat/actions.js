@@ -16,6 +16,7 @@ export const SET_BACK_PREV_ROOM = "@CHAT/SET_BACK_PREV_ROOM";
 export const SET_INCALLING_FRIENDS = "@CHAT/SET_INCALLING_FRIENDS";
 export const SET_INVIDEOCALL_FRIENDS = "@CHAT/SET_INVIDEOCALL_FRIENDS";
 export const SAVE_IMAGE_MESSAGE = "@CHAT/SAVE_IMAGE_MESSAGE";
+export const SET_SINGLE_ROOMS = "@CHAT/SET_SINGLE_ROOMS";
 
 const LOAD_ROOM_HISTORY_ROUTE = "/message/history";
 const SAVE_MESSAGE_ROUTE = "/message/save";
@@ -124,4 +125,8 @@ export const setBackPrevRoom = (prevRoom) => (dispatch) => {
     type: SET_BACK_PREV_ROOM,
     payload: { prevRoom },
   });
+};
+
+export const setSingleRooms = (singleRooms) => (dispatch) => {
+  dispatch({ type: SET_SINGLE_ROOMS, payload: { singleRooms } });
 };

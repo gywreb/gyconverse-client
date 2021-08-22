@@ -13,6 +13,7 @@ import {
   SET_INCALLING_FRIENDS,
   SET_INVIDEOCALL_FRIENDS,
   SET_ONLINE_FRIENDS,
+  SET_SINGLE_ROOMS,
   SET_SOCKET_MESSAGE,
 } from "./actions";
 
@@ -27,6 +28,7 @@ const initialState = {
   onlineFriends: [],
   inCallingFriends: [],
   inVidCallFriends: [],
+  singleRooms: [],
 };
 
 export default function chatReducer(state = initialState, action) {
@@ -124,6 +126,9 @@ export default function chatReducer(state = initialState, action) {
         currentRoom: action.payload.prevRoom,
         prevRoom: null,
       };
+    }
+    case SET_SINGLE_ROOMS: {
+      return { ...state, singleRooms: action.payload.singleRooms };
     }
     default: {
       return state;
