@@ -35,6 +35,8 @@ export const Events = {
   getInCallingUsers: "getInCallingUsers",
   getInVidCallUsers: "getInVidCallUsers",
   logout: "logout",
+  callLeaveUnexpected: "callLeaveUnexpected",
+  callLeaveUnexpectedReceive: "callLeaveUnexpectedReceive",
 };
 
 export class SocketService {
@@ -46,6 +48,10 @@ export class SocketService {
   static authPeer = null;
   static userPeer = null;
   static isInitFREvents = false;
+  static connectionRef = null;
+  static endCallMessage = "";
+  static isInCall = false;
+  static userInfo = null;
 
   static clientInit() {
     SocketService.client = io(baseURL);
@@ -66,5 +72,15 @@ export class SocketService {
   static setAuthVideoStream(stream, authVideoRef) {
     SocketService.authVideo = authVideoRef;
     SocketService.authVideoStream = stream;
+  }
+
+  static setConnectionRef(connectionRef) {
+    SocketService.connectionRef = connectionRef;
+  }
+
+  static clearVideoCall() {
+    SocketService.connectionRef = null;
+    SocketService.isInCall = false;
+    SocketService.endCallMessage = false;
   }
 }

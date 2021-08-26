@@ -2,6 +2,7 @@ import { Avatar, Box, Flex, Icon, IconButton, Text } from "@chakra-ui/react";
 import React from "react";
 import { BsFillInfoCircleFill } from "react-icons/bs";
 import { IoMdVideocam } from "react-icons/io";
+import { fileUri } from "src/configs/apiClient";
 import { appColor } from "src/configs/styles";
 
 const ChatHeader = ({
@@ -33,7 +34,11 @@ const ChatHeader = ({
           <Avatar
             position="relative"
             size="md"
-            src={avatar || ""}
+            src={
+              avatar
+                ? fileUri(avatar)
+                : `https://avatars.dicebear.com/api/gridy/${roomName}.svg`
+            }
             _after={{
               content: "''",
               position: "absolute",

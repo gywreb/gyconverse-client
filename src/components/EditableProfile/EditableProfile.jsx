@@ -5,7 +5,6 @@ import {
   EditableInput,
   EditablePreview,
   Flex,
-  IconButton,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -13,12 +12,9 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  useEditableControls,
 } from "@chakra-ui/react";
 import React from "react";
-import { AiFillEdit } from "react-icons/ai";
 import { fileUri } from "src/configs/apiClient";
-import GCIcon from "../../assets/images/gc-icon-smooth.png";
 
 const EditableProfile = ({ isOpen, onClose, userInfo }) => {
   return (
@@ -30,15 +26,19 @@ const EditableProfile = ({ isOpen, onClose, userInfo }) => {
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Edit Your Profile</ModalHeader>
+        <ModalHeader>Your Profile</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Flex flexDirection="column" alignItems="center">
             <Avatar
               mt={2}
               boxSize={32}
-              src={userInfo?.avatar ? fileUri(userInfo.avatar) : GCIcon}
-              bgColor={userInfo?.avatar ? "white" : "teal"}
+              src={
+                userInfo?.avatar
+                  ? fileUri(userInfo.avatar)
+                  : `https://avatars.dicebear.com/api/gridy/${userInfo?.username}.svg`
+              }
+              //bgColor={userInfo?.avatar ? "white" : "teal"}
               boxShadow="lg"
               padding="2px"
               size="md"
@@ -64,10 +64,10 @@ const EditableProfile = ({ isOpen, onClose, userInfo }) => {
         </ModalBody>
 
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={onClose}>
+          {/* <Button colorScheme="blue" mr={3} onClick={onClose}>
             Close
           </Button>
-          <Button variant="ghost">Secondary Action</Button>
+          <Button variant="ghost">Secondary Action</Button> */}
         </ModalFooter>
       </ModalContent>
     </Modal>

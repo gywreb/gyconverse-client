@@ -1,23 +1,21 @@
-import { chakra, Flex, Icon, Text, useToast } from "@chakra-ui/react";
+import { chakra, Flex, Icon, useToast } from "@chakra-ui/react";
 import React from "react";
 import { useRef } from "react";
 import { useEffect } from "react";
 import { GoPerson } from "react-icons/go";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
-import AppLayout from "src/components/AppLayout/AppLayout";
 import ThreeDotsWave from "src/components/ThreeDotWave/ThreeDotWave";
 import VideoCallControl from "src/components/VideoCallControl/VideoCallControl";
 import { ROUTE_KEY } from "src/configs/routes";
 import { Events, SocketService } from "src/services/SocketService";
-import { loadRoomHistory, saveMessage } from "src/store/chat/actions";
+import { loadRoomHistory } from "src/store/chat/actions";
 import AuthWebcam from "src/components/AuthWebcam/AuthWebcam";
 import { useState } from "react";
 import VideoCallHeader from "src/components/VIdeoCallHeader/VideoCallHeader";
 import Peer from "simple-peer";
-import { AUDIO_TYPE, MESSAGE_TYPE } from "src/configs/constants";
+import { AUDIO_TYPE } from "src/configs/constants";
 import { useStopwatch } from "react-timer-hook";
-import moment from "moment";
 import { timerFormat } from "src/utils/timerFormat";
 
 const Video = chakra("video", {
@@ -52,8 +50,32 @@ const VideoCall = () => {
       callerSignal,
       inviteSignal,
       isInCall: isVidCall,
-      isVideoCall,
+      isCallInitiator,
     } = location.state;
+
+    SocketService.currentSocketRoom = currentRoom;
+    SocketService.userInfo = userInfo;
+
+    if (!isCallInitiator) {
+      navigator.permissions
+        .query({ name: "camera", name: "microphone" })
+        .then((permission) => {
+          if (permission.state === "denied") {
+            toast({
+              title: `Please turn on camera and microphone permission on the top of your browser!`,
+              position: "top",
+              status: "warning",
+              duration: 3000,
+              isClosable: true,
+            });
+            handleLeaveCall();
+            SocketService.client.emit(Events.callLeaveUnexpected, {
+              user: currentRoom,
+              reason: `${userInfo.username} camera and microphone permission is denied!`,
+            });
+          }
+        });
+    }
 
     navigator.mediaDevices
       .enumerateDevices()
@@ -131,8 +153,23 @@ const VideoCall = () => {
       })
       .then(handleGetDevices)
       .catch((err) => {
+        if (!isInCall) {
+          handleHangUp();
+        } else {
+          handleLeaveCall();
+        }
         console.log(err);
       });
+
+    SocketService.client.on(Events.callLeaveUnexpectedReceive, (signal) => {
+      toast({
+        title: signal.reason,
+        position: "top",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    });
 
     SocketService.client.on(Events.denyCallReceive, (signal) => {
       handleHangUp();
@@ -160,11 +197,11 @@ const VideoCall = () => {
       }
       dispatch(loadRoomHistory(currentRoom));
       history.replace(ROUTE_KEY.Chat, {
-        sendCallFinishMess: location.state?.isCallInitiator ? true : false,
+        sendCallFinishMess:
+          location.state?.isCallInitiator || signal.isCloseTab ? true : false,
         content: signal.content,
       });
     });
-
     return () => {
       SocketService.client.off(Events.acceptCall);
       SocketService.client.off(Events.denyCallReceive);
@@ -191,7 +228,7 @@ const VideoCall = () => {
   };
 
   const handleLeaveCall = () => {
-    const content = timerFormat(hours, minutes, seconds);
+    const content = Date.now();
     if (SocketService.authVideoStream) {
       SocketService.authVideoStream.getAudioTracks()[0].stop();
       SocketService.authVideoStream.getVideoTracks()[0].stop();
@@ -326,6 +363,7 @@ const VideoCall = () => {
         // pb={20}
       >
         <VideoCallHeader
+          avatar={currentRoom?.avatar}
           username={currentRoom?.username}
           isInCall={isInCall}
           isVideoMute={isVideoMute}

@@ -25,6 +25,7 @@ const MessageTop = chakra("div", {
 });
 
 const ChatBox = ({
+  currentRoom,
   authUser,
   messageAnchor,
   handleToBottom,
@@ -104,6 +105,7 @@ const ChatBox = ({
                 type={message.type}
                 content={message.content}
                 avatar={authUser.avatar || ""}
+                username={authUser.username}
                 handleInteractMessage={() =>
                   handleInteractMessage(message, message.type)
                 }
@@ -114,6 +116,7 @@ const ChatBox = ({
                 type={message.type}
                 content={message.content}
                 avatar={message.avatar}
+                username={currentRoom.username}
                 handleInteractMessage={() =>
                   handleInteractMessage(message, message.type)
                 }
@@ -127,6 +130,7 @@ const ChatBox = ({
                   type={message.type}
                   content={message.content}
                   avatar={authUser.avatar || ""}
+                  username={authUser.username}
                   isContinuous
                   handleInteractMessage={() =>
                     handleInteractMessage(message, message.type)
@@ -138,6 +142,7 @@ const ChatBox = ({
                   type={message.type}
                   content={message.content}
                   avatar={message.avatar}
+                  username={currentRoom.username}
                   isContinuous
                   handleInteractMessage={() =>
                     handleInteractMessage(message, message.type)
@@ -152,6 +157,7 @@ const ChatBox = ({
                   type={message.type}
                   content={message.content}
                   avatar={authUser.avatar || ""}
+                  username={authUser.username}
                   handleInteractMessage={() =>
                     handleInteractMessage(message, message.type)
                   }
@@ -162,6 +168,7 @@ const ChatBox = ({
                   type={message.type}
                   content={message.content}
                   avatar={message.avatar}
+                  username={currentRoom.username}
                   handleInteractMessage={() =>
                     handleInteractMessage(message, message.type)
                   }

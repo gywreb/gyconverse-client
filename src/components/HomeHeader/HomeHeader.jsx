@@ -204,7 +204,7 @@ const HomeHeader = () => {
                   userInfo.friendRequests.map((request) => (
                     <FriendRequestItem
                       username={request.username}
-                      avatar={request.username}
+                      avatar={request.avatar}
                       isAccepting={afrLoading && request.id === acceptingId}
                       handleConfirmRequest={() => handleConfirmRequest(request)}
                     />

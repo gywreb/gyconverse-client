@@ -2,6 +2,7 @@ import { Avatar, Button, Flex, Icon, Text } from "@chakra-ui/react";
 import React from "react";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import { GiEmptyHourglass } from "react-icons/gi";
+import { fileUri } from "src/configs/apiClient";
 import MotionDiv from "../MotionDiv/MotionDiv";
 
 const PersonCard = ({
@@ -32,7 +33,14 @@ const PersonCard = ({
         flexDirection="column"
         isTruncated
       >
-        <Avatar size="xl" src={avatar ? avatar : ""} />
+        <Avatar
+          size="xl"
+          src={
+            avatar
+              ? fileUri(avatar)
+              : `https://avatars.dicebear.com/api/gridy/${username}.svg`
+          }
+        />
         <Text
           maxWidth="80%"
           isTruncated

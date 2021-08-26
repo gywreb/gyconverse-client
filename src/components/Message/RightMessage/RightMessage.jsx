@@ -13,9 +13,10 @@ import { useSelector } from "react-redux";
 import { fileUri } from "src/configs/apiClient";
 import { MESSAGE_TYPE } from "src/configs/constants";
 import PlaceholderImg from "../../../assets/images/placeholder.jpg";
-import GCIcon from "../../../assets/images/gc-icon-smooth.png";
+import { format } from "timeago.js";
 
 const RightMessage = ({
+  username,
   content,
   avatar,
   isContinuous,
@@ -108,7 +109,7 @@ const RightMessage = ({
                 color="white"
                 fontSize="sm"
               >
-                {content || ``}
+                {format(content) || ``}
               </Text>
             </Flex>
           </>
@@ -156,9 +157,13 @@ const RightMessage = ({
           <Avatar
             alignSelf="flex-end"
             size="md"
-            src={avatar ? fileUri(avatar) : GCIcon}
+            src={
+              avatar
+                ? fileUri(avatar)
+                : `https://avatars.dicebear.com/api/gridy/${username}.svg`
+            }
             padding="2px"
-            bgColor={avatar ? "white" : "teal"}
+            //bgColor={avatar ? "white" : "teal"}
             boxShadow="lg"
             opacity={isContinuous ? 0 : 1}
           />
