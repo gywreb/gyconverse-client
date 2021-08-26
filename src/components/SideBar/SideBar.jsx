@@ -87,8 +87,12 @@ const SideBar = () => {
           <Avatar
             cursor="pointer"
             size="md"
-            src={userInfo?.avatar ? fileUri(userInfo.avatar) : GCIcon}
-            bgColor={userInfo?.avatar ? "white" : "teal"}
+            src={
+              userInfo?.avatar
+                ? fileUri(userInfo.avatar)
+                : `https://avatars.dicebear.com/api/gridy/${userInfo?.username}.svg`
+            }
+            //bgColor={userInfo?.avatar ? "white" : "teal"}
             boxShadow="lg"
             padding="2px"
             onClick={() => {

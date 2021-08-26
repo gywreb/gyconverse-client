@@ -1,5 +1,6 @@
 import { Avatar, Flex, Text } from "@chakra-ui/react";
 import React from "react";
+import { fileUri } from "src/configs/apiClient";
 import TimerDisplay from "../TimerDisplay/TimerDisplay";
 
 const VideoCallHeader = ({
@@ -21,7 +22,15 @@ const VideoCallHeader = ({
       pb={6}
       pl={6}
     >
-      <Avatar size="lg" src={avatar ? avatar : ""} mr={4} />
+      <Avatar
+        size="lg"
+        src={
+          avatar
+            ? fileUri(avatar)
+            : `https://avatars.dicebear.com/api/gridy/${username}.svg`
+        }
+        mr={4}
+      />
       <Flex flexDirection="column">
         <Text
           fontWeight="bold"

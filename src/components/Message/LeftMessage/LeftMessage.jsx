@@ -12,8 +12,10 @@ import { IoMdCall } from "react-icons/io";
 import { fileUri } from "src/configs/apiClient";
 import { MESSAGE_TYPE } from "src/configs/constants";
 import PlaceholderImg from "../../../assets/images/placeholder.jpg";
+import { format } from "timeago.js";
 
 const LeftMessage = ({
+  username,
   content,
   avatar,
   type,
@@ -51,7 +53,7 @@ const LeftMessage = ({
                 color="gray.500"
                 fontSize="sm"
               >
-                {content || ``}
+                {format(content) || ``}
               </Text>
             </Flex>
             <Flex
@@ -90,7 +92,11 @@ const LeftMessage = ({
           <Avatar
             alignSelf="flex-end"
             size="md"
-            src={avatar ? avatar : ""}
+            src={
+              avatar
+                ? avatar
+                : `https://avatars.dicebear.com/api/gridy/${username}.svg`
+            }
             padding="2px"
             bgColor={avatar ? "white" : "none"}
             boxShadow="lg"

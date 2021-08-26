@@ -1,5 +1,6 @@
 import { Avatar, Button, Flex, Text } from "@chakra-ui/react";
 import React from "react";
+import { fileUri } from "src/configs/apiClient";
 
 const FriendRequestItem = ({
   avatar,
@@ -18,7 +19,14 @@ const FriendRequestItem = ({
       _hover={{ bgColor: "gray.100" }}
     >
       <Flex alignItems="center" maxWidth="50%" pl={4} pr={4} isTruncated>
-        <Avatar size="md" src={avatar ? avatar : ""} />
+        <Avatar
+          size="md"
+          src={
+            avatar
+              ? fileUri(avatar)
+              : `https://avatars.dicebear.com/api/gridy/${username}.svg`
+          }
+        />
         <Text isTruncated pl={4}>
           {username || ""}
         </Text>

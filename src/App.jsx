@@ -6,7 +6,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import theme from "./configs/extendTheme";
 import { BrowserRouter as Router } from "react-router-dom";
 import AuthProvider from "./components/AuthProvider/AuthProvider";
-import { SocketService } from "./services/SocketService";
+import { Events, SocketService } from "./services/SocketService";
 
 const App = () => {
   useEffect(() => {

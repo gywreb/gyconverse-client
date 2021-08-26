@@ -1,6 +1,7 @@
 import { Avatar, Box, Button, Flex, Text } from "@chakra-ui/react";
 import React from "react";
 import { RiChatSmile3Fill } from "react-icons/ri";
+import { fileUri } from "src/configs/apiClient";
 import { appColor } from "src/configs/styles";
 
 const ConversationItem = ({
@@ -27,7 +28,11 @@ const ConversationItem = ({
         <Flex maxWidth="70%" alignItems="center">
           <Avatar
             size="md"
-            src={avatar ? avatar : ""}
+            src={
+              avatar
+                ? fileUri(avatar)
+                : `https://avatars.dicebear.com/api/gridy/${username}.svg`
+            }
             _after={{
               content: "''",
               position: "absolute",

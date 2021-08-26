@@ -85,6 +85,7 @@ const Chat = () => {
     });
     return () => {
       SocketService.client.off(Events.receiveSingleChat);
+      SocketService.client.off(Events.callLeaveUnexpectedReceive);
     };
   }, []);
 
@@ -183,10 +184,25 @@ const Chat = () => {
           isClosable: true,
         });
       } else {
-        history.replace({
-          pathname: ROUTE_KEY.VideoCall,
-          state: { isCallInitiator: true, isVideoCall: true },
-        });
+        navigator.permissions
+          .query({ name: "camera", name: "microphone" })
+          .then((permission) => {
+            console.log(permission);
+            if (permission.state === "denied") {
+              toast({
+                title: `Please turn on camera and microphone permission on the top of your browser!`,
+                position: "top",
+                status: "warning",
+                duration: 3000,
+                isClosable: true,
+              });
+            } else {
+              history.replace({
+                pathname: ROUTE_KEY.VideoCall,
+                state: { isCallInitiator: true, isVideoCall: true },
+              });
+            }
+          });
       }
     }
   };
@@ -259,6 +275,7 @@ const Chat = () => {
             </Flex>
           ) : (
             <ChatBox
+              currentRoom={currentRoom}
               authUser={userInfo}
               messageAnchor={messageAnchor}
               handleToBottom={handleToBottom}
