@@ -1,13 +1,11 @@
-import { Flex } from "@chakra-ui/react";
 import React from "react";
 import AppLayout from "src/components/AppLayout/AppLayout";
+import ComingSoonTemplate from "src/components/ComingSoonTemplate/ComingSoonTemplate";
 
 const GroupChat = () => {
   return (
     <AppLayout>
-      <Flex width="100%" alignItems="center" justifyContent="center">
-        Group chat
-      </Flex>
+      <ComingSoonTemplate featureName="Group Chat" />
     </AppLayout>
   );
 };
