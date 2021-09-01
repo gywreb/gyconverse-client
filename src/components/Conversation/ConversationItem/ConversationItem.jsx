@@ -59,7 +59,7 @@ const ConversationItem = ({
             </Text>
             <Text isTruncated fontSize="sm" color="gray.500">
               {talked && lastMessage
-                ? parseEmojis(lastMessage)
+                ? parseEmojis(lastMessage.toString()) || ``
                 : `Let start chatting now`}
             </Text>
           </Box>

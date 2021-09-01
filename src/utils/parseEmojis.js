@@ -7,7 +7,6 @@ export const parseEmojis = (value) => {
 
   // toArray outputs React elements for emojis and strings for other
   const newValue = emojisArray.reduce((previous, current) => {
-    console.log(typeof current);
     if (typeof current === "string") {
       return previous + current;
     }

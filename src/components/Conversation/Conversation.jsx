@@ -28,6 +28,7 @@ import {
 } from "src/store/chat/actions";
 import AppScrollBar from "../AppScrollBar/AppScrollBar";
 import MotionDiv from "../MotionDiv/MotionDiv";
+import VideoCallNotiCard from "../VideoCallNotiCard/VideoCallNotiCard";
 import ConversationItem from "./ConversationItem/ConversationItem";
 
 const Conversation = () => {
@@ -116,7 +117,7 @@ const Conversation = () => {
       </Flex>
       <Box height="1.5px" width="100%" bgColor="gray.200" />
       <AppScrollBar mt={4} overflow="scroll" pb={8} maxHeight="85%">
-        {userInfo.friends.map((friend, index) => {
+        {userInfo?.friends?.map((friend, index) => {
           return (
             <ConversationItem
               key={index}
@@ -147,6 +148,7 @@ const Conversation = () => {
           );
         })}
       </AppScrollBar>
+      {userInfo?.friends?.length && <VideoCallNotiCard />}
     </MotionDiv>
   );
 };

@@ -23,7 +23,7 @@ import { ROUTE_KEY } from "src/configs/routes";
 import { Events, SocketService } from "src/services/SocketService";
 import { setBackPrevRoom, setCurrentRoom } from "src/store/chat/actions";
 
-const VideoCallNotiCard = ({}) => {
+const VideoCallNotiCard = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const [notiInfo, setNotiInfo] = useState(null);
@@ -33,32 +33,50 @@ const VideoCallNotiCard = ({}) => {
   const dispatch = useDispatch();
   const { userInfo } = useSelector((state) => state.auth);
   const { currentRoom, prevRoom } = useSelector((state) => state.chat);
+  const [currentVidFriend, setCurrentVidFriend] = useState(null);
   let notiTimeOut = null;
+
+  const handleReceiveCall = (signal) => {
+    onOpen();
+    setNotiInfo(signal.from);
+    const selectedFriend = userInfo?.friends?.find(
+      (friend) => friend.id == signal.from._id
+    );
+    if (selectedFriend) {
+      // improve this bug in future
+      selectedFriend.talked = true;
+      selectedFriend.singleRoom = signal.to.singleRoom;
+      setCurrentVidFriend({ ...selectedFriend });
+      dispatch(
+        setCurrentRoom(selectedFriend, currentRoom ? currentRoom : null)
+      );
+    } else {
+      handleDenyCall(signal);
+      toast({
+        title: `${signal?.from?.username} try to video call you but failed :(, let talk with ${signal?.from?.username}!`,
+        position: "top",
+        status: "error",
+        duration: 20000,
+        isClosable: true,
+      });
+    }
+    setSignal(signal);
+    setCallerSignal(signal.fromSignal);
+    notiTimeOut = setTimeout(() => {
+      handleDenyCall(signal);
+      toast({
+        title: `You missed a call from ${signal?.from?.username}!`,
+        position: "top",
+        status: "error",
+        duration: 20000,
+        isClosable: true,
+      });
+    }, 10000);
+  };
 
   useEffect(() => {
     SocketService.client.on(Events.receiveCall, (signal) => {
-      onOpen();
-      setNotiInfo(signal.from);
-      const selectedFriend = userInfo?.friends?.find(
-        (friend) => friend.id === signal.from._id
-      );
-      if (selectedFriend) {
-        dispatch(
-          setCurrentRoom(selectedFriend, currentRoom ? currentRoom : null)
-        );
-      }
-      setSignal(signal);
-      setCallerSignal(signal.fromSignal);
-      notiTimeOut = setTimeout(() => {
-        handleDenyCall(signal);
-        toast({
-          title: `You missed a call from ${signal?.from?.username}!`,
-          position: "top",
-          status: "error",
-          duration: 20000,
-          isClosable: true,
-        });
-      }, 10000);
+      handleReceiveCall(signal);
     });
 
     SocketService.client.on(Events.cancelCallReceive, (signal) => {
@@ -82,6 +100,7 @@ const VideoCallNotiCard = ({}) => {
   const handleAnswerCall = () => {
     onClose();
     clearTimeout(notiTimeOut);
+    console.log(currentVidFriend);
     history.replace({
       pathname: ROUTE_KEY.VideoCall,
       state: {
@@ -89,6 +108,7 @@ const VideoCallNotiCard = ({}) => {
         callerSignal,
         inviteSignal: signal,
         isVideoCall: true,
+        currentVidFriend,
       },
     });
   };

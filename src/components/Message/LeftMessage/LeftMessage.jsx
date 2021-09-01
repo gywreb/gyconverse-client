@@ -34,7 +34,8 @@ const LeftMessage = ({
               src={fileUri(content)}
               width="100%"
               objectFit="cover"
-              borderRadius="8px"
+              borderRadius="14px"
+              borderTopLeftRadius={isContinuous ? "14px" : 0}
               fallback={
                 <Progress colorScheme="whiteAlpha" size="xs" isIndeterminate />
               }

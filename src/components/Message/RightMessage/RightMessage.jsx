@@ -43,7 +43,8 @@ const RightMessage = ({
                 src={content}
                 width="100%"
                 objectFit="cover"
-                borderRadius="8px"
+                borderRadius="14px"
+                borderTopRightRadius={isContinuous ? "14px" : 0}
                 fallback={
                   <Progress
                     colorScheme="whiteAlpha"
@@ -75,7 +76,8 @@ const RightMessage = ({
               src={fileUri(content)}
               width="100%"
               objectFit="cover"
-              borderRadius="8px"
+              borderRadius="14px"
+              borderTopRightRadius={isContinuous ? "14px" : 0}
               fallback={
                 <Progress colorScheme="whiteAlpha" size="xs" isIndeterminate />
               }

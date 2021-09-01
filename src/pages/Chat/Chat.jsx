@@ -60,6 +60,7 @@ const Chat = () => {
         room: currentRoom?.singleRoom,
         sender: userInfo._id,
         content: location.state.content,
+        timestamps: moment(),
       };
       setTimeout(() => {
         dispatch(saveMessage(newMessage, MESSAGE_TYPE.VIDEO_CALL));
@@ -150,6 +151,7 @@ const Chat = () => {
     newMessage.append("room", currentRoom.singleRoom);
     newMessage.append("sender", userInfo._id);
     newMessage.append("content", file);
+    newMessage.append("timestamps", moment());
 
     dispatch(
       saveMessage(newMessage, MESSAGE_TYPE.IMAGE, base64Data, messageAnchor)
