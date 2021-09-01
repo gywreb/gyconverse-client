@@ -174,7 +174,7 @@ const VideoCall = () => {
     SocketService.client.on(Events.denyCallReceive, (signal) => {
       handleHangUp();
       toast({
-        title: `${signal?.to?.username} denied your call :(`,
+        title: `${signal?.to?.username} maybe busy right now :(, let try to call ${signal?.to?.username} later!`,
         position: "top",
         status: "error",
         duration: 5000,

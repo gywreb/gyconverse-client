@@ -108,7 +108,7 @@ export default function authReducer(state = initialState, action) {
       return {
         ...state,
         frLoading: false,
-        userInfo: updatedUserInfo,
+        userInfo: { ...updatedUserInfo },
         requestingId: null,
       };
     }
@@ -122,7 +122,7 @@ export default function authReducer(state = initialState, action) {
         ...state.userInfo,
         friendRequests: [...requestList],
       };
-      return { ...state, userInfo: updatedUserInfo };
+      return { ...state, userInfo: { ...updatedUserInfo } };
     }
 
     case ACCEPT_FRIEND_REQUEST_LOADING: {
@@ -153,7 +153,7 @@ export default function authReducer(state = initialState, action) {
         friends: [...action.payload.updatedTargetUser.friends],
         pendingRequests: [...action.payload.updatedTargetUser.pendingRequests],
       };
-      return { ...state, userInfo: updatedUserInfo };
+      return { ...state, userInfo: { ...updatedUserInfo } };
     }
 
     case SEND_CHAT_INVITE_LOADING: {
@@ -172,7 +172,7 @@ export default function authReducer(state = initialState, action) {
       return {
         ...state,
         inviteLoading: false,
-        userInfo: updatedUserInfo,
+        userInfo: { ...updatedUserInfo },
         invitingId: null,
       };
     }

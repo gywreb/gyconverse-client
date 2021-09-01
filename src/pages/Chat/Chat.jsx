@@ -19,6 +19,7 @@ import {
 } from "src/store/chat/actions";
 import { fileUri } from "src/configs/apiClient";
 import ImageViewer from "react-simple-image-viewer";
+import moment from "moment";
 
 const Gallery = chakra(ImageViewer, {
   baseStyle: {
@@ -59,6 +60,7 @@ const Chat = () => {
         room: currentRoom?.singleRoom,
         sender: userInfo._id,
         content: location.state.content,
+        timestamps: moment(),
       };
       setTimeout(() => {
         dispatch(saveMessage(newMessage, MESSAGE_TYPE.VIDEO_CALL));
@@ -102,6 +104,7 @@ const Chat = () => {
       room: currentRoom.singleRoom,
       sender: userInfo._id,
       content: message,
+      timestamps: moment(),
     };
     dispatch(saveMessage(newMessage, MESSAGE_TYPE.TEXT));
     setMessage("");
@@ -148,6 +151,7 @@ const Chat = () => {
     newMessage.append("room", currentRoom.singleRoom);
     newMessage.append("sender", userInfo._id);
     newMessage.append("content", file);
+    newMessage.append("timestamps", moment());
 
     dispatch(
       saveMessage(newMessage, MESSAGE_TYPE.IMAGE, base64Data, messageAnchor)

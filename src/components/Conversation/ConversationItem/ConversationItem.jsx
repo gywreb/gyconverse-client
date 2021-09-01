@@ -3,6 +3,7 @@ import React from "react";
 import { RiChatSmile3Fill } from "react-icons/ri";
 import { fileUri } from "src/configs/apiClient";
 import { appColor } from "src/configs/styles";
+import { parseEmojis } from "src/utils/parseEmojis";
 
 const ConversationItem = ({
   username,
@@ -57,7 +58,9 @@ const ConversationItem = ({
               {username || ``}
             </Text>
             <Text isTruncated fontSize="sm" color="gray.500">
-              {talked && lastMessage ? lastMessage : `Let start chatting now`}
+              {talked && lastMessage
+                ? parseEmojis(lastMessage.toString()) || ``
+                : `Let start chatting now`}
             </Text>
           </Box>
         </Flex>

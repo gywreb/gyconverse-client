@@ -109,6 +109,7 @@ const ChatBox = ({
                 handleInteractMessage={() =>
                   handleInteractMessage(message, message.type)
                 }
+                timestamps={message.timestamps}
               />
             ) : (
               <LeftMessage
@@ -120,6 +121,7 @@ const ChatBox = ({
                 handleInteractMessage={() =>
                   handleInteractMessage(message, message.type)
                 }
+                timestamps={message.timestamps}
               />
             );
           } else {
@@ -135,6 +137,7 @@ const ChatBox = ({
                   handleInteractMessage={() =>
                     handleInteractMessage(message, message.type)
                   }
+                  timestamps={message.timestamps}
                 />
               ) : (
                 <LeftMessage
@@ -147,6 +150,7 @@ const ChatBox = ({
                   handleInteractMessage={() =>
                     handleInteractMessage(message, message.type)
                   }
+                  timestamps={message.timestamps}
                 />
               );
             } else {
@@ -161,6 +165,7 @@ const ChatBox = ({
                   handleInteractMessage={() =>
                     handleInteractMessage(message, message.type)
                   }
+                  timestamps={message.timestamps}
                 />
               ) : (
                 <LeftMessage
@@ -172,6 +177,7 @@ const ChatBox = ({
                   handleInteractMessage={() =>
                     handleInteractMessage(message, message.type)
                   }
+                  timestamps={message.timestamps}
                 />
               );
             }

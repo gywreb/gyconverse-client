@@ -14,6 +14,8 @@ import { fileUri } from "src/configs/apiClient";
 import { MESSAGE_TYPE } from "src/configs/constants";
 import PlaceholderImg from "../../../assets/images/placeholder.jpg";
 import { format } from "timeago.js";
+import { parseEmojis } from "src/utils/parseEmojis";
+import moment from "moment";
 
 const RightMessage = ({
   username,
@@ -22,6 +24,7 @@ const RightMessage = ({
   isContinuous,
   type,
   handleInteractMessage,
+  timestamps,
 }) => {
   const { loadingSendMess } = useSelector((state) => state.chat);
 
@@ -40,7 +43,8 @@ const RightMessage = ({
                 src={content}
                 width="100%"
                 objectFit="cover"
-                borderRadius="8px"
+                borderRadius="14px"
+                borderTopRightRadius={isContinuous ? "14px" : 0}
                 fallback={
                   <Progress
                     colorScheme="whiteAlpha"
@@ -72,7 +76,8 @@ const RightMessage = ({
               src={fileUri(content)}
               width="100%"
               objectFit="cover"
-              borderRadius="8px"
+              borderRadius="14px"
+              borderTopRightRadius={isContinuous ? "14px" : 0}
               fallback={
                 <Progress colorScheme="whiteAlpha" size="xs" isIndeterminate />
               }
@@ -118,7 +123,7 @@ const RightMessage = ({
       default: {
         return (
           <Text maxWidth="100%" textAlign="right" color="white">
-            {content || ``}
+            {parseEmojis(content) || content || ``}
           </Text>
         );
       }
@@ -130,32 +135,40 @@ const RightMessage = ({
         width="75%"
         alignSelf="flex-end"
         justifyContent="flex-end"
-        pt={2}
-        pb={2}
+        pt={isContinuous ? 0.5 : 4}
+        pb={0.5}
         pl={6}
       >
-        <Flex
-          maxWidth="90%"
-          p={
-            type === MESSAGE_TYPE.TEXT || type === MESSAGE_TYPE.VIDEO_CALL
-              ? 4
-              : 0
-          }
-          borderRadius="8px"
-          bgColor={
-            type === MESSAGE_TYPE.TEXT || type === MESSAGE_TYPE.VIDEO_CALL
-              ? "teal.500"
-              : "white"
-          }
-          boxShadow="lg"
-          cursor={type !== MESSAGE_TYPE.TEXT ? "pointer" : null}
-          onClick={handleInteractMessage}
-        >
-          {renderMessage(type)}
+        <Flex flexDirection="column" maxWidth="90%">
+          {!isContinuous && (
+            <Text textAlign="right" fontSize="xs" color="gray.500" mr={1}>
+              {moment(timestamps).format("DD/MM - h:mm A")}
+            </Text>
+          )}
+          <Flex
+            justifyContent="flex-end"
+            p={
+              type === MESSAGE_TYPE.TEXT || type === MESSAGE_TYPE.VIDEO_CALL
+                ? 4
+                : 0
+            }
+            borderRadius="14px"
+            borderTopRightRadius={isContinuous ? "14px" : 0}
+            bgColor={
+              type === MESSAGE_TYPE.TEXT || type === MESSAGE_TYPE.VIDEO_CALL
+                ? "teal.500"
+                : "white"
+            }
+            boxShadow="lg"
+            cursor={type !== MESSAGE_TYPE.TEXT ? "pointer" : null}
+            onClick={handleInteractMessage}
+          >
+            {renderMessage(type)}
+          </Flex>
         </Flex>
         <Flex maxWidth="10%" ml={2}>
           <Avatar
-            alignSelf="flex-end"
+            alignSelf="flex-start"
             size="md"
             src={
               avatar
