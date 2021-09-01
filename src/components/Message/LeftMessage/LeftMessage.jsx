@@ -13,6 +13,8 @@ import { fileUri } from "src/configs/apiClient";
 import { MESSAGE_TYPE } from "src/configs/constants";
 import PlaceholderImg from "../../../assets/images/placeholder.jpg";
 import { format } from "timeago.js";
+import { parseEmojis } from "src/utils/parseEmojis";
+import moment from "moment";
 
 const LeftMessage = ({
   username,
@@ -21,6 +23,7 @@ const LeftMessage = ({
   type,
   isContinuous,
   handleInteractMessage,
+  timestamps,
 }) => {
   const renderMessage = (type) => {
     switch (type) {
@@ -72,7 +75,7 @@ const LeftMessage = ({
       default: {
         return (
           <Text maxWidth="100%" textAlign="left">
-            {content || ``}
+            {parseEmojis(content) || content || ``}
           </Text>
         );
       }
@@ -84,13 +87,13 @@ const LeftMessage = ({
         width="75%"
         alignSelf="flex-start"
         justifyContent="flex-start"
-        pt={2}
-        pb={2}
+        pt={isContinuous ? 0.5 : 4}
+        pb={0.5}
         pr={6}
       >
         <Flex maxWidth="10%" mr={2}>
           <Avatar
-            alignSelf="flex-end"
+            alignSelf="flex-start"
             size="md"
             src={
               avatar
@@ -103,21 +106,28 @@ const LeftMessage = ({
             opacity={isContinuous ? 0 : 1}
           />
         </Flex>
-        <Flex
-          cursor={type !== MESSAGE_TYPE.TEXT ? "pointer" : null}
-          onClick={handleInteractMessage}
-          maxWidth="90%"
-          p={
-            type === MESSAGE_TYPE.TEXT || type === MESSAGE_TYPE.VIDEO_CALL
-              ? 4
-              : 0
-          }
-          borderRadius="8px"
-          bgColor="gray.50"
-          boxShadow="lg"
-          alignItems="center"
-        >
-          {renderMessage(type)}
+        <Flex maxWidth="90%" flexDirection="column">
+          {!isContinuous && (
+            <Text textAlign="left" fontSize="xs" color="gray.500" ml={1}>
+              {moment(timestamps).format("DD/MM - h:mm A")}
+            </Text>
+          )}
+          <Flex
+            cursor={type !== MESSAGE_TYPE.TEXT ? "pointer" : null}
+            onClick={handleInteractMessage}
+            p={
+              type === MESSAGE_TYPE.TEXT || type === MESSAGE_TYPE.VIDEO_CALL
+                ? 4
+                : 0
+            }
+            borderRadius="14px"
+            borderTopLeftRadius={isContinuous ? "14px" : 0}
+            bgColor="gray.50"
+            boxShadow="lg"
+            alignItems="center"
+          >
+            {renderMessage(type)}
+          </Flex>
         </Flex>
       </Flex>
     </Flex>
